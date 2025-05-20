@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.SEND_SMS" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+<!-- <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" /> -->
 <uses-permission android:name="android.permission.WAKE_LOCK" />
+<uses-permission android:name="android.permission.INTERNET"/>
+
+   <!-- ★ Google Play Billing permission -->
+    <uses-permission android:name="com.android.vending.BILLING"/>
 <!-- For Android 12 (API ≤ 32) and below -->
 <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 <uses-permission

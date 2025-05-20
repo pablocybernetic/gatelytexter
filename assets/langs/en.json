@@ -1,10 +1,10 @@
 {
     "app_title"      : "Texter Ace",
-    "import_btn"     : "Import CSV",
+    "import_btn"     : "Import Excel",
     "send_btn"       : "Send ",
     "cancel_btn"     : "Cancel",
     "upgrade_btn"    : "Upgrade",
-    "status_none"    : "No CSV imported",
+    "status_none"    : "No Excel imported",
     "status_loading" : "Loading…",
     "status_send"    : "Sending…",
     "status_done"    : "Sent: ({sent}), Skipped: ({skipped})",

@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'dart:io';
 import 'dart:ui';
+import 'package:gately/services/purchase_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -74,6 +75,7 @@ const double _kGlassBlur = 16;
 /*──────────────────────── HomeScreen ─────────────────────────*/
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -208,9 +210,22 @@ class _HomeScreenState extends State<HomeScreen> {
               lic.edition == Edition.free ? 'upgrade'.tr() : 'premium'.tr(),
               style: TextStyle(color: fg),
             ),
-            onTap: () {
+            // inside the Drawer ListTile that shows “Upgrade / Premium”
+            onTap: () async {
               Navigator.pop(ctx);
-              lic.upgrade();
+              if (lic.edition == Edition.free) {
+                final purchase = Provider.of<PurchaseService>(
+                  ctx,
+                  listen: false,
+                );
+                if (!purchase.ready) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    const SnackBar(content: Text('Store not available')),
+                  );
+                  return;
+                }
+                await purchase.buy(); // triggers in-app-purchase flow
+              }
             },
           ),
         ],
@@ -228,7 +243,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   // lang code is 'en' or 'sw' or 'fr' or 'de' or sp
 
                   final name =
-                      loc.languageCode == 'sw' ? 'Kiswahili' : 'English';
+                      loc.languageCode == 'sw'
+                          ? 'Kiswahili'
+                          : loc.languageCode == 'fr'
+                          ? 'Français'
+                          : loc.languageCode == 'de'
+                          ? 'Deutsch'
+                          : loc.languageCode == 'ar'
+                          ? 'العربية'
+                          // : loc.languageCode == 'sp'
+                          // ? 'Español'
+                          : 'English';
                   return PopupMenuItem(value: loc, child: Text(name));
                 }).toList(),
         onSelected: (loc) => context.setLocale(loc),

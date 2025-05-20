@@ -5,6 +5,9 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gately/models/message_row.dart';
+import 'package:gately/services/license_manager.dart';
+import 'package:gately/services/purchase_service.dart';
+import 'package:provider/provider.dart';
 
 /*──────────────────────── palette helper ───────────────────────*/
 class _C {
@@ -282,27 +285,63 @@ class _MessageTableState extends State<MessageTable> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      widget.rows.remove(r);
-                                      _page = _page.clamp(
-                                        0,
-                                        (widget.rows.length / _pageSize)
-                                                .ceil() -
-                                            1,
-                                      );
-                                    });
-                                    Navigator.pop(ctx);
-                                  },
-                                  child: Text(
-                                    'remove_row_btn'.tr(),
-                                    style: TextStyle(
-                                      color: _C.red(ctx),
-                                      fontWeight: FontWeight.bold,
+                                // ─── “Unlock” button – only when the user is still on the FREE tier ───
+                                if (LicenseManager.instance.edition ==
+                                    Edition.free)
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(
+                                        ctx,
+                                      ); // close the dialog first
+                                      // call the purchase service that’s provided higher up
+                                      final purchase =
+                                          context.read<PurchaseService>();
+                                      if (!purchase.ready) {
+                                        ScaffoldMessenger.of(ctx).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Store not available',
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      await purchase
+                                          .buy(); // start Google-Play flow
+                                      setState(
+                                        () {},
+                                      ); // refresh the table row status
+                                    },
+                                    child: Text(
+                                      'unlock'.tr(), // or just 'Unlock'
+                                      style: TextStyle(color: _C.fg(ctx)),
                                     ),
                                   ),
-                                ),
+                                // else display remove button
+                                if (LicenseManager.instance.edition ==
+                                    Edition.paid)
+                                  // ─── “Remove row” button – always visible ───
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.rows.remove(r);
+                                        _page = _page.clamp(
+                                          0,
+                                          (widget.rows.length / _pageSize)
+                                                  .ceil() -
+                                              1,
+                                        );
+                                      });
+                                      Navigator.pop(ctx);
+                                    },
+                                    child: Text(
+                                      'remove_row_btn'.tr(),
+                                      style: TextStyle(
+                                        color: _C.red(ctx),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx),
                                   child: Text(

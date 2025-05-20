@@ -27,6 +27,15 @@
     "cc_title"    : "رمز الدولة",
     "status_progress": "التقدم...",
     "user_manual" : "دليل المستخدم",
+    "premium"   : "مميز",
+    "Skipped"   : "تم تخطي",
+    "Invalid"   : "غير صالح",
+    "Waiting"   : "في الانتظار",
+    "Delivered" : "تم التسليم",
+    "try_again" : "حاول تحميل ملف CSV أو Excel",
+    "unexpected_failure" : "تعذر استيراد هذا الملف",
+    "app_desc": "تستقبل هذه التطبيق ملف Excel وترسل الرسائل النصية. يجب أن يحتوي Excel على أعمدة رقم الهاتف والرسالة.",
+    
     "close_btn"      : "إغلاق"
 }
   

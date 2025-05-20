@@ -136,10 +136,9 @@ class SmsService {
     final statuses =
         await [
           Permission.sms,
-          Permission.phone, // = READ_PHONE_STATE
+          // Permission.phone, // = READ_PHONE_STATE
         ].request();
 
-    return statuses[Permission.sms]!.isGranted &&
-        statuses[Permission.phone]!.isGranted;
+    return statuses[Permission.sms]!.isGranted;
   }
 }

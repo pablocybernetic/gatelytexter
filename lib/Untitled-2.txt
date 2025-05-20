@@ -1,0 +1,303 @@
+<!-- hero-section.liquid -->
+<div class="bg-white py-16 px-4 sm:px-6 lg:px-8 font-sans mt-6">
+  <!-- Hero Image and Title Section -->
+   <!-- Hero Image and Title Section -->
+  <div class="max-w-6xl mx-auto mb-12">
+  <div class="relative aspect-[120/41] rounded-md overflow-hidden" style="border-radius: 0.5rem;">
+      <!-- Hero Image -->
+      <img src="{{ section.settings.hero_image | img_url: '1500x' }}" width="100%" height="20rem" alt="Join the Club" class=" object-cover h-72 sm:h-96 rounded-md  overflow-hidden" style="height: 20rem; ">
+      <!-- Overlay and Heading -->
+      <div class="absolute inset-0 bg-black bg-opacity-25">
+        <h1 class="absolute bottom-6 left-6 text-white text-4xl sm:text-5xl md:text-6xl font-bold" style="left: 1.2rem">
+          JOIN THE CLUB
+        </h1>
+      </div>
+    </div>
+  </div>
+  <!-- Description -->
+  <div class="max-w-3xl mx-auto text-center mb-10">
+    <p class="text-xlg sm:text-xl text-gray-800 mt-6">
+      Become part of the ArtCaffé family and enjoy members-only treats, fresh updates and special rewards
+    </p>
+  </div>
+
+  <!-- Join the Club Form -->
+  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 sm:p-10 border border-gray-200">
+    <form action="https://club.artcaffemarket.co.ke/join-the-club.php" method="post" class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="first_name" class="block text-gray-700 font-medium mb-2">Your first name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="Enter first name" required class="w-full border border-gray-300 rounded px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-green-600">
+        </div>
+        <div>
+          <label for="last_name" class="block text-gray-700 font-medium mb-2">Your Surname</label>
+          <input type="text" id="last_name" name="last_name" placeholder="Enter your family name" required class="w-full border border-gray-300 rounded px-4 py-3 text-black focus:outline-none focus:ring-2 focus:ring-green-600">
+        </div>
+<style>
+  .phone-wrapper {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .country-code {
+    border: none;
+    padding: 0 1rem;
+    background-color: #f9fafb;
+    color: #111;
+    font-size: 1rem;
+    outline: none;
+    appearance: none;
+    border-right: 1px solid #ccc;
+  }
+
+  .phone-field-wrapper {
+    position: relative;
+    flex: 1;
+  }
+
+  .phone-input {
+    width: 100%;
+    border: none;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* left padding for icon */
+    font-size: 1rem;
+    color: #111;
+    outline: none;
+  }
+
+  .phone-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #9ca3af;
+    font-size: 1.1rem;
+  }
+
+  .country-code:focus,
+  .phone-input:focus {
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3);
+  }
+</style>
+
+<div>
+  <label for="phone" class="block text-gray-700 font-medium mb-2">Mobile phone number</label>
+
+  <div class="phone-wrapper">
+    <select id="country-code" name="country_code" class="country-code" required>
+      <option value="+254" selected>🇰🇪 +254</option>
+      <option value="+1">🇺🇸 +1</option>
+      <option value="+44">🇬🇧 +44</option>
+      <option value="+91">🇮🇳 +91</option>
+      <option value="+27">🇿🇦 +27</option>
+      <option value="+250">🇷🇼 +250</option>
+      <!-- Add more countries as needed -->
+    </select>
+
+    <div class="phone-field-wrapper">
+      <span class="phone-icon">📞</span>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        placeholder="712345678"
+        pattern="[0-9]{7,15}"
+        required
+        class="phone-input"
+      >
+    </div>
+  </div>
+</div>
+
+   <style>
+  .email-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .email-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #9ca3af; /* text-gray-400 */
+    font-size: 1.1rem;
+  }
+
+  .email-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* left padding for icon */
+    font-size: 1rem;
+    color: #111;
+    outline: none;
+    background-color: white;
+    transition: border-color 0.2s;
+  }
+
+  .email-input:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3);
+  }
+</style>
+
+<div>
+  <label for="email" class="block text-gray-700 font-medium mb-2">Your email</label>
+
+  <div class="email-wrapper">
+    <span class="email-icon">📧</span>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="Enter valid email address"
+      required
+      class="email-input"
+    >
+  </div>
+</div>
+
+      </div>
+     <!-- 🎨 CSS: same as before -->
+<style>
+  .birthday-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .birthday-text {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+    font-size: 1rem;
+    color: #111;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: white;
+  }
+
+  .birthday-text:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3);
+  }
+
+  .birthday-text.invalid {
+    border-color: #dc2626;
+  }
+
+  .birthday-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #9ca3af;
+    font-size: 1.1rem;
+  }
+
+  .birthday-text::placeholder {
+    color: #9ca3af;
+  }
+</style>
+
+<!-- 🧾 HTML -->
+<div>
+  <label for="birthday" class="block text-gray-700 font-medium mb-2 mt-6">Your birthday</label>
+
+  <div class="birthday-wrapper">
+    <span class="birthday-icon">📅</span>
+
+    <input
+      type="text"
+      id="birthday"
+      name="birthday"
+      inputmode="numeric"
+      placeholder="YYYY-MM-DD"
+      pattern="^\d{4}-\d{2}-\d{2}$"
+      required
+      class="birthday-text"
+      oninput="formatBirthday(this)"
+    >
+  </div>
+</div>
+
+<!-- 🧠 JS -->
+<script>
+  function formatBirthday(input) {
+    let digits = input.value.replace(/\D/g, '').slice(0, 8);
+
+    // Format as YYYY-MM-DD while typing
+    let formatted = digits;
+    if (digits.length > 4 && digits.length <= 6)
+      formatted = `${digits.slice(0, 4)}-${digits.slice(4)}`;
+    else if (digits.length > 6)
+      formatted = `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
+    else if (digits.length > 0 && digits.length <= 4)
+      formatted = digits;
+
+    input.value = formatted;
+
+    // Validate full ISO format and real date
+    const isValid = validateFullDate(formatted);
+    input.classList.toggle('invalid', !isValid);
+  }
+
+  function validateFullDate(str) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str);
+    if (!match) return false;
+
+    const [_, y, m, d] = match.map(Number);
+    if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+
+    // Handle month-specific and leap year edge cases
+    const maxDay = new Date(y, m, 0).getDate(); // 0th of next month
+    return d <= maxDay;
+  }
+</script>
+
+  <button type="submit" class="w-full btn-green font-semibold py-4 px-6 rounded-md transition duration-200 mt-6 ">
+  SIGN ME UP
+</button>
+
+    </form>
+    <p class="text-center text-sm text-gray-600 mt-6 rounded-md ">
+      By signing up, you agree to join the ArtCaffé mailing list and customer rewards programme.
+    </p>
+  </div>
+</div>
+<style>
+  .btn-green {
+  background-color: #15803d;
+  color: white;
+}
+
+.btn-green:hover {
+  background-color: #166534;
+}
+
+</style>
+<!-- Section Settings Schema -->
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

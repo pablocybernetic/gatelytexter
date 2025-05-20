@@ -27,5 +27,14 @@
     "cc_title"    : "Ländercode",
     "status_progress": "Fortschritt...",
     "user_manual" : "Benutzerhandbuch",
+    "premium"    : "Premium",
+    "Skipped"   : "Übersprungen",
+    "Invalid" : "Ungültig",
+    "Waiting" : "Warten",
+    "Delivered" : "Zugestellt",
+    "try_again" : "Versuchen Sie, eine CSV- oder Excel-Datei hochzuladen",
+    "unexpected_failure" : "Diese Datei konnte nicht importiert werden",
+    "app_desc": "Diese App empfängt eine Excel-Datei und sendet SMS. Die Excel-Datei sollte Spalten mit Telefonnummern und Nachrichten enthalten.",
+    
     "close_btn"      : "Schließen"
 }
