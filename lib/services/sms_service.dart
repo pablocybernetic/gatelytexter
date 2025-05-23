@@ -101,7 +101,7 @@ class SmsService {
         } catch (e) {
           row.status = 'Failed(${e.runtimeType})';
           onStatus('Err: $e');
-          print('Generic error $e');
+          // print('Generic error $e');
           skipped++;
           onRowUpdate?.call();
         }
@@ -164,5 +164,6 @@ class SmsService {
     return statuses[Permission.sms]!.isGranted &&
         statuses[Permission.notification]!.isGranted;
   }
+
   // request SEND_SMS + READ_PHONE_STATE in one go
 }
