@@ -124,21 +124,45 @@ class SmsService {
 
   /* utils ------------------------------------------------------------ */
 
+  /* ───────── helpers ───────── */
+
   String _normalise(String n, String cc) {
-    n = n.replaceAll(RegExp(r'\s+'), '');
+    // 1️⃣ strip EVERYTHING except digits and a plus sign
+    n = n.replaceAll(RegExp(r'[^\d+]'), '');
+
+    // 2️⃣ if there are several “+”, keep only the first one
+    if (n.contains('+')) {
+      n = '+' + n.replaceAll('+', '');
+    }
+
+    /* ── the rest is exactly as before ─────────────────────────── */
+
+    // already full international
     if (n.startsWith('+')) return n;
-    if (n.startsWith('0')) n = n.substring(1);
-    return '$cc$n'; // "+254" + "712..." -> "+254712..."
+
+    // caller supplied CC → prepend
+    if (cc.isNotEmpty) {
+      if (n.startsWith('0')) n = n.substring(1);
+      return '$cc$n';
+    }
+
+    // fallback to default (Kenya)
+    const defaultCc = '+254';
+    if (!n.startsWith('0') && n.length == 12) return '+$n';
+    if (n.startsWith('0')) return '$defaultCc${n.substring(1)}';
+    return n; // may still be invalid, validator will catch
   }
 
   Future<bool> _requestPermissions() async {
-    // request SEND_SMS + READ_PHONE_STATE in one go
+    // request SEND_SMS + READ_PHONE_STATE + NOTIFICATION permissions in one go
     final statuses =
         await [
           Permission.sms,
-          // Permission.phone, // = READ_PHONE_STATE
+          Permission.notification, // Request notification permission
         ].request();
 
-    return statuses[Permission.sms]!.isGranted;
+    return statuses[Permission.sms]!.isGranted &&
+        statuses[Permission.notification]!.isGranted;
   }
+  // request SEND_SMS + READ_PHONE_STATE in one go
 }

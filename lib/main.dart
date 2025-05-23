@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:gately/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:gately/services/license_manager.dart';
 import 'package:gately/services/purchase_service.dart'; // <-- NEW
@@ -8,6 +9,9 @@ import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await LicenseManager.instance.grantPaid(); // unlock premium locally
+  // 🔔 local-notification init
+  await Notifier.instance.init();
 
   /// initialise the two singletons
   await LicenseManager.instance.init();

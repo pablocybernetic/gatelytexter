@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'dart:io';
 import 'dart:ui';
+import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -148,6 +149,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(decoration: BoxDecoration(color: _P.glassFill(c))),
         ),
       ),
+      actions: [
+        // if on paid display diamond icon
+        if (context.read<LicenseManager>().edition == Edition.paid)
+          IconButton(
+            icon: const Icon(Icons.diamond),
+            onPressed: () {},
+            color: _P.accent(c),
+          ),
+      ],
     );
   }
 
@@ -378,43 +388,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // String? _detectExcelCc(List<MessageRow> rows) {
-  //   for (final r in rows) {
-  //     for (final n in r.numbers) {
-  //       final m = RegExp(r'^\+(\d{1,4})').firstMatch(n.trim());
-  //       if (m != null) return '+${m.group(1)!}';
-  //     }
-  //   }
-  //   return null;
-  // }
-
-  // Future<bool?> _askExcelCcDecision(BuildContext ctx, String cc) async {
-  //   return showDialog<bool>(
-  //     context: ctx,
-  //     builder:
-  //         (_) => AlertDialog(
-  //           title: Text('csv_cc_title'.tr()),
-  //           content: Text('csv_cc_msg'.tr(namedArgs: {'cc': cc})),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(ctx, false),
-  //               child: Text(
-  //                 'keep_pref'.tr(),
-  //                 style: TextStyle(color: _P.blue(ctx)),
-  //               ),
-  //             ),
-  //             ElevatedButton(
-  //               style: ElevatedButton.styleFrom(
-  //                 backgroundColor: _P.danger(ctx),
-  //               ),
-  //               onPressed: () => Navigator.pop(ctx, true),
-  //               child: Text('use_excel'.tr()),
-  //             ),
-  //           ],
-  //         ),
-  //   );
-  // }
-
   /*──────────────── send-all – unchanged except palette refs ───────*/
   Future<void> _sendAll() async {
     final lic = context.read<LicenseManager>();
@@ -441,51 +414,59 @@ class _HomeScreenState extends State<HomeScreen> {
           cancelled ? 'status_cancel' : 'status_done',
           named: {'sent': '$sent', 'skipped': '$skipped'},
         );
+
+        // 🔔 NEW — local notification
+        if (!cancelled) {
+          Notifier.instance.show(
+            'SMS session finished',
+            'Sent: $sent   •   Skipped: $skipped',
+          );
+        }
       },
     );
   }
 
-  /*──────────────── ask / edit CC dialog – unchanged ──────────────*/
-  Future<String?> _askCountryCode(BuildContext ctx, {String? initial}) async {
-    final ctrl = TextEditingController(text: initial?.replaceAll('+', ''));
-    return showDialog<String>(
-      context: ctx,
-      builder:
-          (_) => AlertDialog(
-            title: Text(
-              initial == null ? 'Enter country code' : 'change_cc'.tr(),
-            ),
-            content: TextField(
-              controller: ctrl,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                prefixText: '+',
-                hintText: '1',
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: _P.blue(ctx)),
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text('Cancel', style: TextStyle(color: _P.blue(ctx))),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _P.danger(ctx),
-                ),
-                onPressed:
-                    () => Navigator.pop(
-                      ctx,
-                      ctrl.text.trim().replaceAll('+', ''),
-                    ),
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-    );
-  }
+  // /*──────────────── ask / edit CC dialog – unchanged ──────────────*/
+  // Future<String?> _askCountryCode(BuildContext ctx, {String? initial}) async {
+  //   final ctrl = TextEditingController(text: initial?.replaceAll('+', ''));
+  //   return showDialog<String>(
+  //     context: ctx,
+  //     builder:
+  //         (_) => AlertDialog(
+  //           title: Text(
+  //             initial == null ? 'Enter country code' : 'change_cc'.tr(),
+  //           ),
+  //           content: TextField(
+  //             controller: ctrl,
+  //             keyboardType: TextInputType.phone,
+  //             decoration: InputDecoration(
+  //               prefixText: '+',
+  //               hintText: '1',
+  //               focusedBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: _P.blue(ctx)),
+  //               ),
+  //             ),
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(ctx),
+  //               child: Text('Cancel', style: TextStyle(color: _P.blue(ctx))),
+  //             ),
+  //             ElevatedButton(
+  //               style: ElevatedButton.styleFrom(
+  //                 backgroundColor: _P.danger(ctx),
+  //               ),
+  //               onPressed:
+  //                   () => Navigator.pop(
+  //                     ctx,
+  //                     ctrl.text.trim().replaceAll('+', ''),
+  //                   ),
+  //               child: const Text('Save'),
+  //             ),
+  //           ],
+  //         ),
+  //   );
+  // }
 
   /*──────────────── glass container & button style ───────────────*/
   Widget _glass(

@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Not used but kept for reference
 class CountryCodeManager {
   static const _key = 'gately_country_code';
 

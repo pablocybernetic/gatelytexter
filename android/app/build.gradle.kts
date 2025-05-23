@@ -27,6 +27,8 @@ android {
         // You can use 17 if you’ve bumped the JDK in gradle.properties
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
     }
     kotlinOptions { jvmTarget = "11" }
 
@@ -65,4 +67,11 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+    // Flutter & plugin dependencies are added automatically.
+    // You only need to declare EXTRA ones yourself.
+
+    /* runtime for core-library-desugaring */
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
