@@ -36,7 +36,11 @@
     "try_again" : "Essayez de télécharger un fichier csv ou Excel",
     "unexpected_failure" : "Impossible d'importer ce fichier",
     "app_desc": "Cette application reçoit un fichier excel et envoie des SMS. L'excel doit avoir des colonnes de numéro de téléphone et de message.",
-    
+    "Store_not_available": "Magasin non disponible", 
+    "cannot_send_msg" : "Vous ne pouvez pas envoyer de messages pour le moment. Veuillez vous abonner pour envoyer.",
+    "trial_expired" : "La période d'essai de 30 jours est terminée",  
+    "sms_summary": "Envoyé: {sent}   •   Ignoré: {skipped}",
+    "sms_finished": "Session SMS terminée",  
     "status_progress": "En cours…"
 
 

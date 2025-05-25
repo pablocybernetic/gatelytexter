@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:another_telephony/telephony.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:gately/models/message_row.dart';
 import 'package:gately/util/validators.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,9 +27,38 @@ class SmsService {
   }) async {
     _cancelSignal = Completer<void>();
 
-    if (!await _requestPermissions()) {
-      onStatus('SMS permission denied');
-      return;
+    // if (!await _requestPermissions()) {
+    //   onStatus('SMS permission denied');
+    //   return;
+    // }
+    final smsGranted = await _requestPermissions();
+    if (!smsGranted) {
+      // snackbar or dialog to inform user about SMS permission
+      // AlertDialog to say permission is needed
+      (BuildContext context) {
+        return showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text('Permission Required'.tr()),
+              content: Text(
+                'SMS permission is required to send messages.'.tr(),
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text('OK'.tr()),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
+          },
+        );
+      };
+    }
+
+    final notifGranted = await hasNotificationPermission();
+    if (!notifGranted) {
+      onStatus('Notification permission denied'); // Inform, but do NOT return
     }
 
     int sent = 0, skipped = 0;
@@ -153,16 +183,17 @@ class SmsService {
     return n; // may still be invalid, validator will catch
   }
 
-  Future<bool> _requestPermissions() async {
-    // request SEND_SMS + READ_PHONE_STATE + NOTIFICATION permissions in one go
-    final statuses =
-        await [
-          Permission.sms,
-          Permission.notification, // Request notification permission
-        ].request();
+  // Notification only Permission method bool
+  Future<bool> hasNotificationPermission() async {
+    final status = await Permission.notification.status;
+    return status.isGranted;
+  }
 
-    return statuses[Permission.sms]!.isGranted &&
-        statuses[Permission.notification]!.isGranted;
+  Future<bool> _requestPermissions() async {
+    // Request both SMS and Notification permissions
+    final statuses = await [Permission.sms, Permission.notification].request();
+
+    return statuses[Permission.sms]?.isGranted ?? false;
   }
 
   // request SEND_SMS + READ_PHONE_STATE in one go

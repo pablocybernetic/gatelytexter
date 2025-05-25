@@ -35,6 +35,11 @@
 "try_again" : "Try uploading csv or Excel file",
 "unexpected_failure" : "Couldn’t import that file",
 "app_desc": "This app receives an excel file & sends texts.The excel should have tel number & message columns.",
+"Store_not_available": "Playstore not available",
+"cannot_send_msg" : "You cannot send messages right now. Please upgrade to send.",
+"trial_expired" : "30 days trial period is over",
+"sms_summary": "Sent: {sent}   •   Skipped: {skipped}",
+"sms_finished": "SMS session finished",
     "close_btn"      : "Close"
 
   }

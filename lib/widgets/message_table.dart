@@ -298,9 +298,10 @@ class _MessageTableState extends State<MessageTable> {
                                           context.read<PurchaseService>();
                                       if (!purchase.ready) {
                                         ScaffoldMessenger.of(ctx).showSnackBar(
-                                          const SnackBar(
+                                          SnackBar(
                                             content: Text(
-                                              'Store not available',
+                                              'Store_not_available'
+                                                  .tr(), // or 'Store not available',
                                             ),
                                           ),
                                         );
@@ -312,10 +313,11 @@ class _MessageTableState extends State<MessageTable> {
                                         () {},
                                       ); // refresh the table row status
                                     },
-                                    child: Text(
-                                      'unlock'.tr(), // or just 'Unlock'
-                                      style: TextStyle(color: _C.fg(ctx)),
-                                    ),
+                                    child: SizedBox(width: 10),
+                                    // Text(
+                                    //   'unlock'.tr(), // or just 'Unlock'
+                                    //   style: TextStyle(color: _C.fg(ctx)),
+                                    // ),
                                   ),
                                 // else display remove button
                                 if (LicenseManager.instance.edition ==

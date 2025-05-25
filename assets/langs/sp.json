@@ -35,7 +35,11 @@
     "try_again" : "Intenta subir un archivo csv o Excel",
     "unexpected_failure" : "No se pudo importar ese archivo",
     "app_desc": "Esta aplicación recibe un archivo de Excel y envía mensajes de texto. El Excel debe tener columnas de número de teléfono y mensaje.",
-  
+    "Store_not_available": "Tienda no disponible",
+    "cannot_send_msg" : "No puedes enviar mensajes ahora. Por favor, actualiza para enviar.",
+    "trial_expired" : "El período de prueba de 30 días ha terminado",
+    "sms_summary": "Enviados: {sent}   •   Omitidos: {skipped}",
+    "sms_finished": "Sesión de SMS finalizada",
     "close_btn"      : "Cerrar"
 }
   

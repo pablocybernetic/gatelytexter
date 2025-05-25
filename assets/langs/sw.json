@@ -1,6 +1,7 @@
 {
     "app_title"      : "Texter Ace",
     "import_btn"     : "Ingiza Excel",
+
     "send_btn"       : "Tuma ",
     "cancel_btn"     : "Ghairi",
     "upgrade_btn"    : "Boreshesha",
@@ -37,6 +38,11 @@
     "try_again" : "Jaribu kupakia faili nyingine",
     "unexpected_failure" : "Haiwezekani kupakia faili hiyo",
     "app_desc": "Hii ni programu inayopokea faili ya excel na kutuma ujumbe. Excel inapaswa kuwa na nambari za simu na safu za ujumbe.",
+    "Store_not_available": "Playstore halipatikani",
+    "cannot_send_msg" : "Huwezi kutuma ujumbe sasa hivi. Tafadhali boresha ili kutuma.",
+    "trial_expired" : "Muda wa majaribio wa siku 30 umekwisha",
+    "sms_summary": "Imetumwa: {sent}   •   Imepitwa: {skipped}",
+    "sms_finished": "Kikao cha SMS kimeisha",
     "status_progress": "inasonga mbele…"
 
 

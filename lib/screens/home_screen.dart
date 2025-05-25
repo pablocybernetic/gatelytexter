@@ -272,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
   /*──────────────────────── button row ─────────────────────────*/
   Widget _buttons(BuildContext ctx, LicenseManager lic) {
     final canSend = !_sending && _rows.isNotEmpty && !lic.isExpired;
+    // if expired, disable the send button
     return Column(
       children: [
         // text field for direction of use: This app receives an excel file &amp; sends texts.
@@ -302,7 +303,54 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: Text('import_btn'.tr()),
               ),
               const SizedBox(width: 16),
-              if (!_sending)
+
+              // if expired, show dialog after clicking send button
+              if (lic.isExpired)
+                ElevatedButton.icon(
+                  style: _btnStyle(ctx, danger: true),
+                  onPressed: () {
+                    _setStatus('status_trial');
+                    showDialog(
+                      context: ctx,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("trial_expired".tr()),
+                          content: Text("cannot_send_msg".tr()),
+                          actions: [
+                            // upgrade button
+                            TextButton(
+                              child: Text("upgrade_btn".tr()),
+                              onPressed: () async {
+                                Navigator.of(context).pop(); // Close the dialog
+                                final purchase =
+                                    context.read<PurchaseService>();
+                                if (!purchase.ready) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Store_not_available'.tr()),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                await purchase
+                                    .buy(); // triggers in-app-purchase flow
+                              },
+                            ),
+                            TextButton(
+                              child: Text("close_btn".tr()),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.send),
+                  label: Text('send_btn'.tr()),
+                )
+              else if (!_sending)
                 ElevatedButton.icon(
                   style: _btnStyle(ctx),
                   onPressed: canSend ? _sendAll : null,
@@ -418,8 +466,10 @@ class _HomeScreenState extends State<HomeScreen> {
         // 🔔 NEW — local notification
         if (!cancelled) {
           Notifier.instance.show(
-            'SMS session finished',
-            'Sent: $sent   •   Skipped: $skipped',
+            'sms_finished'.tr(),
+            'sms_summary'.tr(
+              namedArgs: {'sent': '$sent', 'skipped': '$skipped'},
+            ),
           );
         }
       },
