@@ -36,8 +36,8 @@ android {
         applicationId = "com.gately.texterace"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 31
+        versionName = "3.1.1"
     }
 
     /** --- 🔑 signing --- **/
