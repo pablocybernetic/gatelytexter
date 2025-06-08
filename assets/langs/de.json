@@ -40,5 +40,23 @@
     "trial_expired" : "30-tägige Testphase ist abgelaufen",
     "sms_summary": "Gesendet: {sent}   •   Übersprungen: {skipped}",
     "sms_finished": "SMS-Sitzung beendet",
+    "import_google_sheet": "Google Sheet importieren",
+    "import_google_sheet_desc": "Importieren Sie ein Google Sheet, indem Sie die URL des Sheets angeben. Das Sheet muss öffentlich zugänglich sein.",
+    "google_sheet_url": "Google Sheet URL",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "Google Sheet importieren",
+    "google_sheet_import_error": "Fehler beim Importieren des Google Sheets. Bitte überprüfen Sie die URL und stellen Sie sicher, dass das Sheet öffentlich zugänglich ist.",
+    "google_sheet_import_success": "Google Sheet erfolgreich importiert.",
+    "google_sheet_empty": "Das Google Sheet ist leer oder kann nicht gelesen werden. Bitte überprüfen Sie das Sheet und versuchen Sie es erneut.",
+    "no_internet_connection": "Keine Internetverbindung. Bitte überprüfen Sie Ihr Netzwerk.",
+    "enter_google_sheet_link": "Google Sheet Link eingeben",
+    "google_sheet_private_error": "Dieses Google Sheet ist privat oder erfordert eine Anmeldung. Bitte verwenden Sie ein öffentliches Sheet, das jeder mit dem Link ansehen kann.",
+    "invalid_google_sheet_url": "Ungültiges Google Sheets URL-Format. Bitte geben Sie eine gültige URL an.",
+    "google_sheet_url_invalid": "Der Link ist keine gültige Google Sheets URL.",
+    "google_sheet_access_denied": "Zugriff verweigert. Stellen Sie sicher, dass das Sheet öffentlich ist (geteilt mit 'Jeder mit dem Link').",
+    "import_success": "Erfolgreich {count} Zeilen importiert.",
+    "use_google_sheet": "Google Sheet verwenden",
+    "use_excel_file": "Excel-Datei verwenden",
+
     "close_btn"      : "Schließen"
 }

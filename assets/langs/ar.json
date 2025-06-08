@@ -40,6 +40,24 @@
     "trial_expired" : "انتهت فترة التجريب لمدة 30 يومًا",
     "sms_summary": "تم الإرسال: {sent}   •   تم التخطي: {skipped}",
     "sms_finished": "انتهت جلسة الرسائل القصيرة",
+    "import_google_sheet": "استيراد ورقة Google",
+    "import_google_sheet_desc": "استيراد ورقة Google من خلال توفير عنوان URL للورقة. يجب أن تكون الورقة متاحة للجمهور.",
+    "google_sheet_url": "عنوان URL لورقة Google",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "استيراد ورقة Google",
+    "google_sheet_import_error": "خطأ في استيراد ورقة Google. يرجى التحقق من عنوان URL والتأكد من أن الورقة متاحة للجمهور.",
+    "google_sheet_import_success": "تم استيراد ورقة Google بنجاح.",
+    "google_sheet_empty": "ورقة Google فارغة أو لا يمكن قراءتها. يرجى التحقق من الورقة والمحاولة مرة أخرى.",
+    "no_internet_connection": "لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة الخاصة بك.",
+    "enter_google_sheet_link": "أدخل رابط ورقة Google",
+    "google_sheet_private_error": "هذه الورقة خاصة أو تتطلب تسجيل الدخول. يرجى استخدام ورقة عامة يمكن لأي شخص لديه الرابط مشاهدتها.",
+    "invalid_google_sheet_url": "تنسيق عنوان URL لورقة Google غير صالح. يرجى تقديم عنوان URL صالح.",
+    "google_sheet_url_invalid": "الرابط ليس عنوان URL صالح لورقة Google.",
+    "google_sheet_access_denied": "تم رفض الوصول. تأكد من أن الورقة عامة (مشاركة مع 'أي شخص لديه الرابط').",
+    "import_success": "تم استيراد {count} صفوف بنجاح.",
+    "use_google_sheet": "استخدام ورقة Google",
+    "use_excel_file": "استخدام ملف Excel",
+
     "close_btn"      : "إغلاق"
 }
   

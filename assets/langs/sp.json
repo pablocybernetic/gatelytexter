@@ -40,6 +40,24 @@
     "trial_expired" : "El período de prueba de 30 días ha terminado",
     "sms_summary": "Enviados: {sent}   •   Omitidos: {skipped}",
     "sms_finished": "Sesión de SMS finalizada",
+    "import_google_sheet": "Importar Hoja de Google",
+    "import_google_sheet_desc": "Importa una Hoja de Google proporcionando la URL de la hoja. La hoja debe ser accesible públicamente.",
+    "google_sheet_url": "URL de la Hoja de Google",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "Importar Hoja de Google",
+    "google_sheet_import_error": "Error al importar la Hoja de Google. Por favor, verifica la URL y asegúrate de que la hoja sea accesible públicamente.",
+    "google_sheet_import_success": "Hoja de Google importada con éxito.",
+    "google_sheet_empty": "La Hoja de Google está vacía o no se puede leer. Por favor, verifica la hoja e inténtalo de nuevo.",
+    "no_internet_connection": "Sin conexión a Internet. Por favor, verifica tu red.",
+    "enter_google_sheet_link": "Ingresa el enlace de la Hoja de Google",
+    "google_sheet_private_error": "Esta Hoja de Google es privada o requiere inicio de sesión. Por favor, utiliza una hoja pública que cualquiera pueda ver con el enlace.",
+    "invalid_google_sheet_url": "Formato de URL de Hoja de Google inválido. Por favor, proporciona una URL válida.",
+    "google_sheet_url_invalid": "El enlace no es una URL válida de Hoja de Google.",
+    "google_sheet_access_denied": "Acceso denegado. Asegúrate de que la hoja sea pública (compartida con 'Cualquiera con el enlace').",
+    "import_success": "Importadas {count} filas con éxito.",
+    "use_google_sheet": "Usar Hoja de Google",
+    "use_excel_file": "Usar archivo de Excel",
+
     "close_btn"      : "Cerrar"
 }
   

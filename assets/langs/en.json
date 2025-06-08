@@ -40,6 +40,24 @@
 "trial_expired" : "30 days trial period is over",
 "sms_summary": "Sent: {sent}   •   Skipped: {skipped}",
 "sms_finished": "SMS session finished",
+"import_google_sheet": "Import Google Sheet",
+"import_google_sheet_desc": "Import a Google Sheet by providing the URL of the sheet. The sheet must be publicly accessible.",
+"google_sheet_url": "Google Sheet URL",
+"google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+"google_sheet_import_btn": "Import Google Sheet",
+"google_sheet_import_error": "Error importing Google Sheet. Please check the URL and ensure the sheet is publicly accessible.",
+"google_sheet_import_success": "Google Sheet imported successfully.",
+"google_sheet_empty": "The Google Sheet is empty or cannot be read. Please check the sheet and try again.",
+"no_internet_connection": "No internet connection. Please check your network.",
+ "enter_google_sheet_link":"Enter Google Sheet Link",
+"google_sheet_private_error": "This Google Sheet is private or requires login. Please use a public sheet that anyone with the link can view.",
+"invalid_google_sheet_url": "Invalid Google Sheets URL format. Please provide a valid URL.",
+"google_sheet_url_invalid":"The link is not a valid Google Sheets URL.",
+"google_sheet_access_denied": "Access denied. Make sure the sheet is public (shared with 'Anyone with the link').",
+"import_success": "Imported {count} rows successfully.",
+"use_google_sheet": "Use Google Sheet",
+"use_excel_file": "Use Excel File",
+
     "close_btn"      : "Close"
 
   }

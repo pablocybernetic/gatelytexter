@@ -40,6 +40,24 @@
     "trial_expired" : "30 दिन की परीक्षण अवधि समाप्त हो गई है",
     "sms_summary": "भेजे गए: {sent}   •   छोड़े गए: {skipped}",
     "sms_finished": "SMS सत्र समाप्त",
+    "import_google_sheet": "Google शीट आयात करें",
+    "import_google_sheet_desc": "शीट के URL प्रदान करके Google शीट आयात करें। शीट को सार्वजनिक रूप से सुलभ होना चाहिए।",
+    "google_sheet_url": "Google शीट URL",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "Google शीट आयात करें",
+    "google_sheet_import_error": "Google शीट आयात करते समय त्रुटि। कृपया URL की जांच करें और सुनिश्चित करें कि शीट सार्वजनिक रूप से सुलभ है।",
+    "google_sheet_import_success": "Google शीट सफलतापूर्वक आयात किया गया।",
+    "google_sheet_empty": "Google शीट खाली है या पढ़ी नहीं जा सकती। कृपया शीट की जांच करें और पुनः प्रयास करें।",
+    "no_internet_connection": "कोई इंटरनेट कनेक्शन नहीं। कृपया अपने नेटवर्क की जांच करें।",
+    "enter_google_sheet_link": "Google शीट लिंक दर्ज करें",
+    "google_sheet_private_error": "यह Google शीट निजी है या लॉगिन की आवश्यकता है। कृपया एक सार्वजनिक शीट का उपयोग करें जिसे कोई भी लिंक के साथ देख सकता है।",
+    "invalid_google_sheet_url": "अमान्य Google शीट URL प्रारूप। कृपया एक मान्य URL प्रदान करें।",
+    "google_sheet_url_invalid": "लिंक एक मान्य Google शीट URL नहीं है।",
+    "google_sheet_access_denied": "पहुँच अस्वीकृत। सुनिश्चित करें कि शीट सार्वजनिक है (जिसे 'लिंक के साथ कोई भी देख सकता है' साझा किया गया है)।",
+    "import_success": "सफलतापूर्वक {count} पंक्तियाँ आयात की गईं।",
+    "use_google_sheet": "Google शीट का उपयोग करें",
+    "use_excel_file": "Excel फ़ाइल का उपयोग करें",
+
     "close_btn"      : "बंद करें"
 }
   

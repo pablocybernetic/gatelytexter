@@ -4,8 +4,9 @@ import 'dart:ui';
 import 'package:gately/services/google_sheet_loader.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   /* state */
+  bool _showGoogleSheet = false;
+
   List<MessageRow> _rows = [];
   String _statusKey = 'status_none';
   List<String> _statusArgs = [];
@@ -100,6 +103,27 @@ class _HomeScreenState extends State<HomeScreen> {
       _statusKey = k;
       _statusArgs = args;
       _statusNamed = named;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImportPreference();
+  }
+
+  Future<void> _loadImportPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _showGoogleSheet = prefs.getBool('showGoogleSheet') ?? false;
+    });
+  }
+
+  Future<void> _saveImportPreference(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showGoogleSheet', value);
+    setState(() {
+      _showGoogleSheet = value;
     });
   }
 
@@ -186,16 +210,18 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Image.asset('assets/logo/logo.png', height: 64),
             ),
           ),
-          // ListTile(
-          //   leading: Icon(Icons.flag_outlined, color: fg),
-          //   title: Text('change_cc'.tr(), style: TextStyle(color: fg)),
-          //   onTap: () async {
-          //     Navigator.pop(ctx);
-          //     final ccNow = await CountryCodeManager.getCode();
-          //     final newCc = await _askCountryCode(ctx, initial: ccNow);
-          //     if (newCc != null) await CountryCodeManager.setCode(newCc);
-          //   },
-          // ),
+          SwitchListTile(
+            title: Text(
+              _showGoogleSheet
+                  ? 'use_google_sheet'.tr()
+                  : 'use_excel_file'.tr(),
+              style: TextStyle(color: fg),
+            ),
+            secondary: Icon(Icons.swap_horiz, color: fg),
+            value: _showGoogleSheet,
+            onChanged: (value) => _saveImportPreference(value),
+          ),
+
           ListTile(
             leading: Icon(Icons.language, color: fg),
             title: Text('language'.tr(), style: TextStyle(color: fg)),
@@ -297,20 +323,20 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton.icon(
-                style: _btnStyle(ctx),
-                onPressed: _sending ? null : _importFile,
-                icon: const Icon(Icons.file_open),
-                label: Text('import_btn'.tr()),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton.icon(
-                style: _btnStyle(ctx),
-                onPressed: _sending ? null : _importFromGoogleSheet,
-                icon: const Icon(Icons.cloud_download),
-                label: Text('import_google_sheet'.tr()), // Add to localization
-              ),
-
+              if (!_showGoogleSheet)
+                ElevatedButton.icon(
+                  style: _btnStyle(ctx),
+                  onPressed: _sending ? null : _importFile,
+                  icon: const Icon(Icons.file_open),
+                  label: Text('import_btn'.tr()),
+                ),
+              if (_showGoogleSheet)
+                ElevatedButton.icon(
+                  style: _btnStyle(ctx),
+                  onPressed: _sending ? null : _importFromGoogleSheet,
+                  icon: const Icon(Icons.cloud_download),
+                  label: Text('import_google_sheet'.tr()),
+                ),
               // if expired, show dialog after clicking send button
               if (lic.isExpired)
                 ElevatedButton.icon(
@@ -395,6 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     // ),
   );
+
   Future<void> _importFromGoogleSheet() async {
     final controller = TextEditingController();
 
@@ -402,22 +429,26 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Enter Google Sheet Link'),
+            title: Text('enter_google_sheet_link'.tr()),
             content: TextField(
               controller: controller,
               decoration: const InputDecoration(
                 hintText: 'https://docs.google.com/spreadsheets/d/...',
+                hintStyle: TextStyle(
+                  color: Color.fromARGB(92, 158, 158, 158), // Extra faint
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child: Text('cancel_btn'.tr()),
               ),
               ElevatedButton(
                 onPressed:
                     () => Navigator.of(context).pop(controller.text.trim()),
-                child: const Text('Import'),
+                child: Text('import_google_sheet'.tr()),
               ),
             ],
           ),
@@ -425,16 +456,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (url == null || url.isEmpty) return;
 
+    _setStatus('status_loading');
     try {
-      _setStatus('status_loading');
       final rows = await GoogleSheetLoader.loadFromUrl(url);
       setState(() => _rows = rows);
       _setStatus('status_rows', args: ['${rows.length}']);
+      Fluttertoast.showToast(
+        msg: "import_success".tr(namedArgs: {'count': '${rows.length}'}),
+
+        // 🔥 Show toast for successful import with tr()  imported_rows_success
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
     } catch (e) {
-      _setStatus('unexpected_failure');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load sheet: $e')));
+      _setStatus('status_none');
+
+      // Print error for debug (optional)
+      // print("GoogleSheetLoader Error: $e");
+
+      // 🔥 Show toast for all error types
+      Fluttertoast.showToast(
+        msg:
+            e is Exception
+                ? e.toString().replaceFirst('Exception: ', '')
+                : 'An unexpected error occurred.',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        textColor: Colors.white,
+      );
     }
   }
 

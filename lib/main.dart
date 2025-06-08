@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:gately/services/license_manager.dart';
@@ -36,6 +37,8 @@ void main() async {
       child: MyApp(purchase: purchaseService), // <── pass down
     ),
   );
+  // Fluttertoast.showToast(msg: 'Test Toast');
+  // Show a test toast to verify everything is working
 }
 
 class MyApp extends StatelessWidget {

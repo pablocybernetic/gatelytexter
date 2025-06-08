@@ -40,7 +40,25 @@
     "cannot_send_msg" : "Vous ne pouvez pas envoyer de messages pour le moment. Veuillez vous abonner pour envoyer.",
     "trial_expired" : "La période d'essai de 30 jours est terminée",  
     "sms_summary": "Envoyé: {sent}   •   Ignoré: {skipped}",
-    "sms_finished": "Session SMS terminée",  
+    "sms_finished": "Session SMS terminée", 
+    "import_google_sheet": "Importer Google Sheet",
+    "import_google_sheet_desc": "Importer une feuille Google en fournissant l'URL de la feuille. La feuille doit être accessible au public.",
+    "google_sheet_url": "URL de la feuille Google",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "Importer la feuille Google",
+    "google_sheet_import_error": "Erreur lors de l'importation de la feuille Google. Veuillez vérifier l'URL et vous assurer que la feuille est accessible au public.",
+    "google_sheet_import_success": "Feuille Google importée avec succès.",
+    "google_sheet_empty": "La feuille Google est vide ou ne peut pas être lue. Veuillez vérifier la feuille et réessayer.",
+    "no_internet_connection": "Pas de connexion Internet. Veuillez vérifier votre réseau.",
+    "enter_google_sheet_link": "Entrez le lien de la feuille Google",
+    "google_sheet_private_error": "Cette feuille Google est privée ou nécessite une connexion. Veuillez utiliser une feuille publique que tout le monde peut voir avec le lien.",
+    "invalid_google_sheet_url": "Format d'URL de Google Sheets invalide. Veuillez fournir une URL valide.",
+    "google_sheet_url_invalid": "Le lien n'est pas une URL valide de Google Sheets.",
+    "google_sheet_access_denied": "Accès refusé. Assurez-vous que la feuille est publique (partagée avec 'Quiconque ayant le lien').",
+    "import_success": "Importé {count} lignes avec succès.",
+    "use_google_sheet": "Utiliser Google Sheet",
+    "use_excel_file": "Utiliser le fichier Excel",
+
     "status_progress": "En cours…"
 
 

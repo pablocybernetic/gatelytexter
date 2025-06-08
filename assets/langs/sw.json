@@ -43,6 +43,24 @@
     "trial_expired" : "Muda wa majaribio wa siku 30 umekwisha",
     "sms_summary": "Imetumwa: {sent}   •   Imepitwa: {skipped}",
     "sms_finished": "Kikao cha SMS kimeisha",
+    "import_google_sheet": "Ingiza Google Sheet",
+    "import_google_sheet_desc": "Ingiza Google Sheet kwa kutoa URL ya karatasi. Karatasi inapaswa kuwa inapatikana kwa umma.",
+    "google_sheet_url": "URL ya Google Sheet",
+    "google_sheet_url_placeholder": "https://docs.google.com/spreadsheets/d/your-sheet-id/edit",
+    "google_sheet_import_btn": "Ingiza Google Sheet",
+    "google_sheet_import_error": "Hitilafu ya kuingiza Google Sheet. Tafadhali angalia URL na uhakikishe karatasi inapatikana kwa umma.",
+    "google_sheet_import_success": "Google Sheet imeingizwa kwa mafanikio.",
+    "google_sheet_empty": "Google Sheet haina maudhui au haiwezi kusomwa. Tafadhali angalia karatasi na ujaribu tena.",
+    "no_internet_connection": "Hakuna muunganisho wa intaneti. Tafadhali angalia mtandao wako.",
+    "enter_google_sheet_link": "Ingiza Kiungo cha Google Sheet",
+    "google_sheet_private_error": "Google Sheet hii ni ya faragha au inahitaji kuingia. Tafadhali tumia karatasi ya umma ambayo mtu yeyote mwenye kiungo anaweza kuona.",
+    "invalid_google_sheet_url": "Muundo wa URL ya Google Sheets si sahihi. Tafadhali toa URL sahihi.",
+    "google_sheet_url_invalid": "Kiungo si URL sahihi ya Google Sheets.",
+    "import_success": "Imepakia {count} safu kwa mafanikio.",
+    "google_sheet_access_denied": "Huwezi kufikia Google Sheet hii. Tafadhali hakikisha una ruhusa ya kuona karatasi.",
+    "use_google_sheet": "Tumia Google Sheet",
+    "use_excel_file": "Tumia Faili la Excel",
+
     "status_progress": "inasonga mbele…"
 
 
