@@ -6,6 +6,11 @@ import 'package:gately/models/message_row.dart';
 import 'package:path/path.dart' as p;
 
 class FileLoader {
+  static List<MessageRow> parseCsv(String contents) {
+    final rows = const CsvToListConverter(eol: '\n').convert(contents);
+    return _parseRows(rows);
+  }
+
   static Future<List<MessageRow>> load(File file) async {
     final ext = p.extension(file.path).toLowerCase();
 

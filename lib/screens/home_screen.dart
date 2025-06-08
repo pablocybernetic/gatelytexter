@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'dart:io';
 import 'dart:ui';
+import 'package:gately/services/google_sheet_loader.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -303,6 +304,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: Text('import_btn'.tr()),
               ),
               const SizedBox(width: 16),
+              ElevatedButton.icon(
+                style: _btnStyle(ctx),
+                onPressed: _sending ? null : _importFromGoogleSheet,
+                icon: const Icon(Icons.cloud_download),
+                label: Text('import_google_sheet'.tr()), // Add to localization
+              ),
 
               // if expired, show dialog after clicking send button
               if (lic.isExpired)
@@ -388,6 +395,48 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     // ),
   );
+  Future<void> _importFromGoogleSheet() async {
+    final controller = TextEditingController();
+
+    final url = await showDialog<String>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Enter Google Sheet Link'),
+            content: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                hintText: 'https://docs.google.com/spreadsheets/d/...',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed:
+                    () => Navigator.of(context).pop(controller.text.trim()),
+                child: const Text('Import'),
+              ),
+            ],
+          ),
+    );
+
+    if (url == null || url.isEmpty) return;
+
+    try {
+      _setStatus('status_loading');
+      final rows = await GoogleSheetLoader.loadFromUrl(url);
+      setState(() => _rows = rows);
+      _setStatus('status_rows', args: ['${rows.length}']);
+    } catch (e) {
+      _setStatus('unexpected_failure');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to load sheet: $e')));
+    }
+  }
 
   /*──────────────── CSV import helpers – unchanged ───────────────*/
   Future<void> _importFile() async {
