@@ -57,6 +57,11 @@
     "import_success": "تم استيراد {count} صفوف بنجاح.",
     "use_google_sheet": "استخدام ورقة Google",
     "use_excel_file": "استخدام ملف Excel",
+    "choose_google_sheet_source": "اختر مصدر ورقة Google",
+    "use_sample_sheet": "استخدام ورقة عينة",
+    "use_previous_sheet": "استخدام الورقة المستخدمة سابقًا",
+    "use_new_link": "استخدام رابط جديد",
+    
 
     "close_btn"      : "إغلاق"
 }

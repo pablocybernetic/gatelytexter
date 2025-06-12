@@ -1,6 +1,7 @@
 // lib/screens/home_screen.dart
 import 'dart:io';
 import 'dart:ui';
+import 'package:gately/dialogs/import_google_sheet_dialog.dart';
 import 'package:gately/services/google_sheet_loader.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
@@ -321,6 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 
           child: Row(
+            // space between buttons
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (!_showGoogleSheet)
@@ -333,10 +335,27 @@ class _HomeScreenState extends State<HomeScreen> {
               if (_showGoogleSheet)
                 ElevatedButton.icon(
                   style: _btnStyle(ctx),
-                  onPressed: _sending ? null : _importFromGoogleSheet,
+                  onPressed:
+                      _sending
+                          ? null
+                          : () {
+                            importFromGoogleSheet(
+                              context: context,
+                              onStatus: _setStatus,
+                              onImport: (rows) {
+                                setState(() => _rows = rows);
+                                _setStatus(
+                                  'status_rows',
+                                  args: ['${rows.length}'],
+                                );
+                              },
+                            );
+                          },
                   icon: const Icon(Icons.cloud_download),
                   label: Text('import_google_sheet'.tr()),
                 ),
+
+              const SizedBox(width: 4), // space between buttons
               // if expired, show dialog after clicking send button
               if (lic.isExpired)
                 ElevatedButton.icon(
@@ -421,74 +440,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     // ),
   );
-
-  Future<void> _importFromGoogleSheet() async {
-    final controller = TextEditingController();
-
-    final url = await showDialog<String>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('enter_google_sheet_link'.tr()),
-            content: TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'https://docs.google.com/spreadsheets/d/...',
-                hintStyle: TextStyle(
-                  color: Color.fromARGB(92, 158, 158, 158), // Extra faint
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('cancel_btn'.tr()),
-              ),
-              ElevatedButton(
-                onPressed:
-                    () => Navigator.of(context).pop(controller.text.trim()),
-                child: Text('import_google_sheet'.tr()),
-              ),
-            ],
-          ),
-    );
-
-    if (url == null || url.isEmpty) return;
-
-    _setStatus('status_loading');
-    try {
-      final rows = await GoogleSheetLoader.loadFromUrl(url);
-      setState(() => _rows = rows);
-      _setStatus('status_rows', args: ['${rows.length}']);
-      Fluttertoast.showToast(
-        msg: "import_success".tr(namedArgs: {'count': '${rows.length}'}),
-
-        // 🔥 Show toast for successful import with tr()  imported_rows_success
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
-    } catch (e) {
-      _setStatus('status_none');
-
-      // Print error for debug (optional)
-      // print("GoogleSheetLoader Error: $e");
-
-      // 🔥 Show toast for all error types
-      Fluttertoast.showToast(
-        msg:
-            e is Exception
-                ? e.toString().replaceFirst('Exception: ', '')
-                : 'An unexpected error occurred.',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        textColor: Colors.white,
-      );
-    }
-  }
 
   /*──────────────── CSV import helpers – unchanged ───────────────*/
   Future<void> _importFile() async {

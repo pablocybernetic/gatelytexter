@@ -57,8 +57,12 @@
 "import_success": "Imported {count} rows successfully.",
 "use_google_sheet": "Use Google Sheet",
 "use_excel_file": "Use Excel File",
+"choose_google_sheet_source": "Choose Google Sheet Source",
+"use_sample_sheet": "Use Sample Sheet",
+"use_previous_sheet": "Use Previously Used Sheet",
+"use_new_link": "Enter New Link",
 
-    "close_btn"      : "Close"
+"close_btn"      : "Close"
 
   }
   

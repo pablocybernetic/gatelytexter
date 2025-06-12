@@ -7,7 +7,7 @@ import 'package:path/path.dart' as p;
 
 class FileLoader {
   static List<MessageRow> parseCsv(String contents) {
-    final rows = const CsvToListConverter(eol: '\n').convert(contents);
+    final rows = const CsvToListConverter().convert(contents);
     return _parseRows(rows);
   }
 
@@ -16,7 +16,7 @@ class FileLoader {
 
     if (ext == '.csv') {
       final raw = await file.readAsString();
-      final rows = const CsvToListConverter(eol: '\n').convert(raw);
+      final rows = const CsvToListConverter().convert(raw);
       return _parseRows(rows);
     }
 

@@ -60,6 +60,11 @@
     "google_sheet_access_denied": "Huwezi kufikia Google Sheet hii. Tafadhali hakikisha una ruhusa ya kuona karatasi.",
     "use_google_sheet": "Tumia Google Sheet",
     "use_excel_file": "Tumia Faili la Excel",
+    "choose_google_sheet_source": "Chagua Chanzo cha Google Sheet",
+    "use_sample_sheet": "Tumia Karatasi ya Mfano",
+    "use_previous_sheet": "Tumia Karatasi ya Awali",
+    "use_new_link": "Tumia Kiungo Kipya",
+    
 
     "status_progress": "inasonga mbele…"
 

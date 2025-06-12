@@ -57,6 +57,10 @@
     "import_success": "Importadas {count} filas con éxito.",
     "use_google_sheet": "Usar Hoja de Google",
     "use_excel_file": "Usar archivo de Excel",
+    "choose_google_sheet_source": "Elegir fuente de Hoja de Google",
+    "use_sample_sheet": "Usar hoja de muestra",
+    "use_previous_sheet": "Usar hoja previamente utilizada",
+
 
     "close_btn"      : "Cerrar"
 }

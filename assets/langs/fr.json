@@ -58,7 +58,13 @@
     "import_success": "Importé {count} lignes avec succès.",
     "use_google_sheet": "Utiliser Google Sheet",
     "use_excel_file": "Utiliser le fichier Excel",
+    "choose_google_sheet_source": "Choisir la source de la feuille Google",
+    "use_sample_sheet": "Utiliser la feuille d'exemple",
+    "use_previous_sheet": "Utiliser la feuille précédemment utilisée",
+    "use_new_link": "Entrer un nouveau lien",
+    "google_sheet_source": "Source de la feuille Google",
 
+    
     "status_progress": "En cours…"
 
 

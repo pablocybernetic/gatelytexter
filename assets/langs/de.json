@@ -57,6 +57,14 @@
     "import_success": "Erfolgreich {count} Zeilen importiert.",
     "use_google_sheet": "Google Sheet verwenden",
     "use_excel_file": "Excel-Datei verwenden",
+  
+    "choose_google_sheet_source": "Google Sheet Quelle wählen",
+    "use_sample_sheet": "Beispielblatt verwenden",
+    "use_previous_sheet": "Früher verwendetes Blatt verwenden",
+    "use_new_link": "Neuen Link eingeben",
+
+
+
 
     "close_btn"      : "Schließen"
 }

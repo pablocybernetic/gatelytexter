@@ -57,6 +57,13 @@
     "import_success": "सफलतापूर्वक {count} पंक्तियाँ आयात की गईं।",
     "use_google_sheet": "Google शीट का उपयोग करें",
     "use_excel_file": "Excel फ़ाइल का उपयोग करें",
+    "choose_google_sheet_source": "Google शीट स्रोत चुनें",
+    "use_sample_sheet": "नमूना शीट का उपयोग करें",
+    "use_previous_sheet": "पिछले उपयोग की गई शीट का उपयोग करें",
+    "use_new_link": "नया लिंक दर्ज करें",
+
+
+
 
     "close_btn"      : "बंद करें"
 }
