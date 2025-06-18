@@ -19,7 +19,6 @@ import 'package:gately/services/license_manager.dart';
 import 'package:gately/services/sms_service.dart';
 import 'package:gately/widgets/message_table.dart';
 import 'package:provider/provider.dart';
-import 'package:confetti/confetti.dart';
 
 /*──────────────────────── brand / theme palette ─────────────────────────*/
 class _P {
@@ -96,8 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _sending = false;
 
   final SmsService _sms = SmsService();
-  late ConfettiController _confettiController;
-
   void _setStatus(
     String k, {
     List<String> args = const [],
@@ -114,15 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadImportPreference();
-    _confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
-    );
-  }
-
-  @override
-  void dispose() {
-    _confettiController.dispose();
-    super.dispose();
   }
 
   Future<void> _loadImportPreference() async {
@@ -146,27 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final lic = context.watch<LicenseManager>();
     return Stack(
       children: [
-        // Confetti animation overlay
-        Align(
-          alignment: Alignment.topCenter,
-          child: ConfettiWidget(
-            confettiController: _confettiController,
-            blastDirectionality: BlastDirectionality.explosive,
-            shouldLoop: false,
-            colors: [
-              Colors.amber,
-              Colors.purple,
-              Colors.blue,
-              Colors.pink,
-              Colors.green,
-            ],
-            numberOfParticles: 30,
-            maxBlastForce: 20,
-            minBlastForce: 8,
-            emissionFrequency: 0.05,
-            gravity: 0.2,
-          ),
-        ),
         Container(color: _P.bg(context)),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -281,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
               lic.edition == Edition.free ? 'upgrade'.tr() : 'premium'.tr(),
               style: TextStyle(color: fg),
             ),
-            // inside the Drawer ListTile that shows "Upgrade / Premium"
+            // inside the Drawer ListTile that shows “Upgrade / Premium”
             onTap: () async {
               Navigator.pop(ctx);
               if (lic.edition == Edition.free) {
@@ -296,7 +263,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   return;
                 }
                 await purchase.buy(); // triggers in-app-purchase flow
-                _confettiController.play();
               }
             },
           ),
@@ -420,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                                 await purchase
                                     .buy(); // triggers in-app-purchase flow
-                                _confettiController.play();
                               },
                             ),
                             TextButton(
@@ -512,13 +477,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message ?? 'Unknown error'),
-        ), // "Unsupported file type: .docx"
+        ), // “Unsupported file type: .docx”
       );
     } catch (e) {
       // 5.  Any other unexpected failure
       _setStatus('unexpected_failure');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Couldn't import that file")),
+        const SnackBar(content: Text('Couldn’t import that file')),
       );
     }
   }
@@ -562,6 +527,48 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  // /*──────────────── ask / edit CC dialog – unchanged ──────────────*/
+  // Future<String?> _askCountryCode(BuildContext ctx, {String? initial}) async {
+  //   final ctrl = TextEditingController(text: initial?.replaceAll('+', ''));
+  //   return showDialog<String>(
+  //     context: ctx,
+  //     builder:
+  //         (_) => AlertDialog(
+  //           title: Text(
+  //             initial == null ? 'Enter country code' : 'change_cc'.tr(),
+  //           ),
+  //           content: TextField(
+  //             controller: ctrl,
+  //             keyboardType: TextInputType.phone,
+  //             decoration: InputDecoration(
+  //               prefixText: '+',
+  //               hintText: '1',
+  //               focusedBorder: UnderlineInputBorder(
+  //                 borderSide: BorderSide(color: _P.blue(ctx)),
+  //               ),
+  //             ),
+  //           ),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(ctx),
+  //               child: Text('Cancel', style: TextStyle(color: _P.blue(ctx))),
+  //             ),
+  //             ElevatedButton(
+  //               style: ElevatedButton.styleFrom(
+  //                 backgroundColor: _P.danger(ctx),
+  //               ),
+  //               onPressed:
+  //                   () => Navigator.pop(
+  //                     ctx,
+  //                     ctrl.text.trim().replaceAll('+', ''),
+  //                   ),
+  //               child: const Text('Save'),
+  //             ),
+  //           ],
+  //         ),
+  //   );
+  // }
 
   /*──────────────── glass container & button style ───────────────*/
   Widget _glass(

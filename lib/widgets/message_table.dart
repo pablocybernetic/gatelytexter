@@ -28,8 +28,6 @@ class _C {
       _dark(c) ? Colors.white.withOpacity(.03) : Colors.black.withOpacity(.03);
   static Color glassFill(BuildContext c) =>
       _dark(c) ? Colors.white.withOpacity(.07) : Colors.black.withOpacity(.07);
-  static Color glassBorder(BuildContext c) =>
-      _dark(c) ? Colors.white.withOpacity(.25) : Colors.black.withOpacity(.15);
 }
 
 const double _kGlassBlur = 16;

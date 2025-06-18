@@ -1,0 +1,368 @@
+{
+    "id": 6536502444349,
+    "admin_graphql_api_id": "gid:\/\/shopify\/Order\/6536502444349",
+    "app_id": 229487116289,
+    "browser_ip": null,
+    "buyer_accepts_marketing": true,
+    "cancel_reason": null,
+    "cancelled_at": null,
+    "cart_token": null,
+    "checkout_id": null,
+    "checkout_token": null,
+    "client_details": null,
+    "closed_at": null,
+    "confirmation_number": "IHC8VQZ0K",
+    "confirmed": true,
+    "contact_email": "gitaup08@gmail.com",
+    "created_at": "2025-06-17T11:00:04+03:00",
+    "currency": "KES",
+    "current_shipping_price_set": {
+        "shop_money": {
+            "amount": "200.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "200.00",
+            "currency_code": "KES"
+        }
+    },
+    "current_subtotal_price": "415.00",
+    "current_subtotal_price_set": {
+        "shop_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        }
+    },
+    "current_total_additional_fees_set": null,
+    "current_total_discounts": "0.00",
+    "current_total_discounts_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "current_total_duties_set": null,
+    "current_total_price": "615.00",
+    "current_total_price_set": {
+        "shop_money": {
+            "amount": "615.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "615.00",
+            "currency_code": "KES"
+        }
+    },
+    "current_total_tax": "0.00",
+    "current_total_tax_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "customer_locale": null,
+    "device_id": null,
+    "discount_codes": [],
+    "duties_included": false,
+    "email": "gitaup08@gmail.com",
+    "estimated_taxes": false,
+    "financial_status": "pending",
+    "fulfillment_status": null,
+    "landing_site": null,
+    "landing_site_ref": null,
+    "location_id": null,
+    "merchant_business_entity_id": "MTgwMTkzNzQ5MzA5",
+    "merchant_of_record_app_id": null,
+    "name": "#6503",
+    "note": null,
+    "note_attributes": [
+        {
+            "name": "Sukhiba order-id",
+            "value": "1389961552827"
+        },
+        {
+            "name": "Delivery Date",
+            "value": "Jun 17, 2025"
+        }
+    ],
+    "number": 5503,
+    "order_number": 6503,
+    "order_status_url": "https:\/\/artcaffemarket.co.ke\/80193749309\/orders\/7741953ff001435a3397b64cce700148\/authenticate?key=cbfc165f7bc7d1e8f0ce020ae3c6cde3",
+    "original_total_additional_fees_set": null,
+    "original_total_duties_set": null,
+    "payment_gateway_names": [],
+    "phone": null,
+    "po_number": null,
+    "presentment_currency": "KES",
+    "processed_at": "2025-06-17T11:00:04+03:00",
+    "reference": null,
+    "referring_site": null,
+    "source_identifier": null,
+    "source_name": "229487116289",
+    "source_url": null,
+    "subtotal_price": "415.00",
+    "subtotal_price_set": {
+        "shop_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        }
+    },
+    "tags": "",
+    "tax_exempt": false,
+    "tax_lines": [],
+    "taxes_included": false,
+    "test": false,
+    "token": "7741953ff001435a3397b64cce700148",
+    "total_cash_rounding_payment_adjustment_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_cash_rounding_refund_adjustment_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_discounts": "0.00",
+    "total_discounts_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_line_items_price": "415.00",
+    "total_line_items_price_set": {
+        "shop_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "415.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_outstanding": "615.00",
+    "total_price": "615.00",
+    "total_price_set": {
+        "shop_money": {
+            "amount": "615.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "615.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_shipping_price_set": {
+        "shop_money": {
+            "amount": "200.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "200.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_tax": "0.00",
+    "total_tax_set": {
+        "shop_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        },
+        "presentment_money": {
+            "amount": "0.00",
+            "currency_code": "KES"
+        }
+    },
+    "total_tip_received": "0.00",
+    "total_weight": 0,
+    "updated_at": "2025-06-17T11:01:56+03:00",
+    "user_id": null,
+    "billing_address": null,
+    "customer": {
+        "id": 7803965342013,
+        "email": "gitaup08@gmail.com",
+        "created_at": "2024-02-12T14:24:30+03:00",
+        "updated_at": "2025-06-17T11:00:05+03:00",
+        "first_name": "Peter",
+        "last_name": "Gitau",
+        "state": "enabled",
+        "note": "Birthday: 1111-19-99",
+        "verified_email": true,
+        "multipass_identifier": null,
+        "tax_exempt": false,
+        "phone": "+254796530456",
+        "currency": "KES",
+        "tax_exemptions": [],
+        "admin_graphql_api_id": "gid:\/\/shopify\/Customer\/7803965342013",
+        "default_address": {
+            "id": 10899190382909,
+            "customer_id": 7803965342013,
+            "first_name": "Peter",
+            "last_name": "Customer",
+            "company": null,
+            "address1": "village",
+            "address2": null,
+            "city": "Nairobi",
+            "province": null,
+            "country": "Kenya",
+            "zip": "00100",
+            "phone": "+254705374455",
+            "name": "Peter Customer",
+            "province_code": null,
+            "country_code": "KE",
+            "country_name": "Kenya",
+            "default": true
+        }
+    },
+    "discount_applications": [],
+    "fulfillments": [],
+    "line_items": [
+        {
+            "id": 16168466645309,
+            "admin_graphql_api_id": "gid:\/\/shopify\/LineItem\/16168466645309",
+            "attributed_staffs": [],
+            "current_quantity": 1,
+            "fulfillable_quantity": 1,
+            "fulfillment_service": "manual",
+            "fulfillment_status": null,
+            "gift_card": false,
+            "grams": 0,
+            "name": "Mamaz Ginger Paste, 230g",
+            "price": "415.00",
+            "price_set": {
+                "shop_money": {
+                    "amount": "415.00",
+                    "currency_code": "KES"
+                },
+                "presentment_money": {
+                    "amount": "415.00",
+                    "currency_code": "KES"
+                }
+            },
+            "product_exists": true,
+            "product_id": 9643518820669,
+            "properties": [],
+            "quantity": 1,
+            "requires_shipping": true,
+            "sales_line_item_group_id": null,
+            "sku": "11801",
+            "taxable": true,
+            "title": "Mamaz Ginger Paste, 230g",
+            "total_discount": "0.00",
+            "total_discount_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "KES"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "KES"
+                }
+            },
+            "variant_id": 49333815902525,
+            "variant_inventory_management": "shopify",
+            "variant_title": null,
+            "vendor": "Mamaz",
+            "tax_lines": [],
+            "duties": [],
+            "discount_allocations": []
+        }
+    ],
+    "payment_terms": null,
+    "refunds": [],
+    "shipping_address": {
+        "first_name": "Peter",
+        "address1": "village",
+        "phone": "+254705374455",
+        "city": "Nairobi",
+        "zip": "00100",
+        "province": "",
+        "country": "Kenya",
+        "last_name": "Customer",
+        "address2": null,
+        "company": null,
+        "latitude": -1.1676983,
+        "longitude": 36.9679904,
+        "name": "Peter Customer",
+        "country_code": "KE",
+        "province_code": null
+    },
+    "shipping_lines": [
+        {
+            "id": 5179489222973,
+            "carrier_identifier": null,
+            "code": "CUSTOM",
+            "current_discounted_price_set": {
+                "shop_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                },
+                "presentment_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                }
+            },
+            "discounted_price": "200.00",
+            "discounted_price_set": {
+                "shop_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                },
+                "presentment_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                }
+            },
+            "is_removed": false,
+            "phone": null,
+            "price": "200.00",
+            "price_set": {
+                "shop_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                },
+                "presentment_money": {
+                    "amount": "200.00",
+                    "currency_code": "KES"
+                }
+            },
+            "requested_fulfillment_service_id": null,
+            "source": "shopify",
+            "title": "Custom Shipping and Extra Charges",
+            "tax_lines": [],
+            "discount_allocations": []
+        }
+    ],
+    "returns": []
+}
