@@ -52,6 +52,10 @@ dependencies:
   fluttertoast: ^8.2.12
   animations: ^2.0.11
   confetti: ^0.7.0
+  local_auth: ^2.3.0
+  isar: ^3.1.0+1
+  flutter_contacts_service: ^0.0.3
+
 
 
 dev_dependencies:

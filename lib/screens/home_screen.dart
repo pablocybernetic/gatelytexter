@@ -5,6 +5,7 @@ import 'package:gately/dialogs/import_google_sheet_dialog.dart';
 import 'package:gately/services/google_sheet_loader.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
+import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,6 +20,11 @@ import 'package:gately/services/license_manager.dart';
 import 'package:gately/services/sms_service.dart';
 import 'package:gately/widgets/message_table.dart';
 import 'package:provider/provider.dart';
+
+import 'sms/sms_provider.dart';
+import 'sms/sms_repository.dart';
+import 'sms/sms_screen.dart';
+import 'sms/sms_service.dart';
 
 /*──────────────────────── brand / theme palette ─────────────────────────*/
 class _P {
@@ -264,6 +270,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 await purchase.buy(); // triggers in-app-purchase flow
               }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.sms, color: fg),
+            title: Text('SMS Features', style: TextStyle(color: fg)),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:
+                      (_) => ChangeNotifierProvider(
+                        create:
+                            (_) => SmsProvider(
+                              SmscService(),
+                              SmsRepository(), // No parameters needed now
+                            ),
+                        child: SmsScreen(),
+                      ),
+                ),
+              );
             },
           ),
         ],

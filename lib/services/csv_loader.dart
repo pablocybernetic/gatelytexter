@@ -27,7 +27,7 @@ class FileLoader {
       if (excel.tables.isEmpty) return [];
 
       final sheet = excel.tables.values.first;
-      final rows = sheet!.rows;
+      final rows = sheet.rows;
 
       return _parseRows(rows);
     }

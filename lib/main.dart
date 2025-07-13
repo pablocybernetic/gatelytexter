@@ -1,25 +1,28 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gately/services/notification_service.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:gately/services/license_manager.dart';
-import 'package:gately/services/purchase_service.dart'; // <-- NEW
+import 'package:gately/services/purchase_service.dart';
 import 'package:gately/screens/home_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+// Import your SMS feature classes:
+import 'package:gately/screens/sms/sms_provider.dart';
+import 'package:gately/screens/sms/sms_repository.dart';
+
+import 'screens/sms/sms_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await LicenseManager.instance.grantPaid(); // unlock premium locally
-  // 🔔 local-notification init
   await Notifier.instance.init();
-
-  /// initialise the two singletons
   await LicenseManager.instance.init();
-  final purchaseService = PurchaseService(); // <── create
-  await purchaseService.init(); // <── connect to store
-
+  final purchaseService = PurchaseService();
+  await purchaseService.init();
   await EasyLocalization.ensureInitialized();
+
+  // TODO: Initialize your DB instance here (Isar, sqflite, etc.)
+  // final isar = await Isar.open(...);
 
   runApp(
     EasyLocalization(
@@ -31,26 +34,35 @@ void main() async {
         Locale('ar'),
       ],
       path: 'assets/langs',
-
       fallbackLocale: const Locale('en'),
       saveLocale: true,
-      child: MyApp(purchase: purchaseService), // <── pass down
+      child: MyApp(
+        purchase: purchaseService,
+        // isar: isar, // pass your db instance if needed
+      ),
     ),
   );
-  // Fluttertoast.showToast(msg: 'Test Toast');
-  // Show a test toast to verify everything is working
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.purchase});
+  const MyApp({
+    super.key,
+    required this.purchase,
+    // required this.isar, // if you use a db instance
+  });
+
   final PurchaseService purchase;
+  // final Isar isar; // if you use Isar
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: LicenseManager.instance),
-        Provider.value(value: purchase), // <── make it reachable
+        Provider.value(value: purchase),
+        ChangeNotifierProvider(
+          create: (_) => SmsProvider(SmscService(), SmsRepository()),
+        ),
       ],
       child: MaterialApp(
         themeMode: ThemeMode.system,
@@ -60,7 +72,7 @@ class MyApp extends StatelessWidget {
         locale: context.locale,
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates,
-        home: const HomeScreen(), // ctor now param-less
+        home: const HomeScreen(),
       ),
     );
   }
