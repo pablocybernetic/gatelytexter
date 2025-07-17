@@ -61,16 +61,71 @@ class _SmsViewtestState extends State<SmsViewtest> {
 
   Future<List<SmsMessage>> getSent() async {
     if (!await requestPermissions()) return [];
-    return await telephony.getSentSms(
-      filter: SmsFilter.where(SmsColumn.ADDRESS).equals(widget.targetNumber),
-      columns: [
-        SmsColumn.ADDRESS,
-        SmsColumn.BODY,
-        SmsColumn.DATE,
-        SmsColumn.TYPE,
-      ],
-      sortOrder: [OrderBy(SmsColumn.DATE, sort: Sort.DESC)],
-    );
+
+    try {
+      return await telephony.getSentSms(
+        filter: SmsFilter.where(SmsColumn.ADDRESS).equals(widget.targetNumber),
+        columns: [
+          SmsColumn.ADDRESS,
+          SmsColumn.BODY,
+          SmsColumn.DATE,
+          SmsColumn.TYPE,
+        ],
+        sortOrder: [OrderBy(SmsColumn.DATE, sort: Sort.DESC)],
+      );
+    } catch (e) {
+      // If getSentSms fails, try alternative approach
+      print('getSentSms failed: $e');
+      return await _getAlternativeSentMessages();
+    }
+  }
+
+  Future<List<SmsMessage>> _getAlternativeSentMessages() async {
+    try {
+      // Try to get messages from different SMS folders
+      List<SmsMessage> sentMessages = [];
+
+      // Try getting from outbox
+      try {
+        final outboxMessages = await telephony.getSentSms(
+          filter: SmsFilter.where(
+            SmsColumn.ADDRESS,
+          ).equals(widget.targetNumber),
+          columns: [
+            SmsColumn.ADDRESS,
+            SmsColumn.BODY,
+            SmsColumn.DATE,
+            SmsColumn.TYPE,
+          ],
+        );
+        sentMessages.addAll(outboxMessages);
+      } catch (e) {
+        print('Outbox query failed: $e');
+      }
+
+      // Try getting from draft
+      try {
+        final draftMessages = await telephony.getDraftSms(
+          filter: SmsFilter.where(
+            SmsColumn.ADDRESS,
+          ).equals(widget.targetNumber),
+          columns: [
+            SmsColumn.ADDRESS,
+            SmsColumn.BODY,
+            SmsColumn.DATE,
+            SmsColumn.TYPE,
+          ],
+        );
+        sentMessages.addAll(draftMessages);
+      } catch (e) {
+        print('Draft query failed: $e');
+      }
+
+      return sentMessages;
+    } catch (e) {
+      print('Alternative sent messages failed: $e');
+      return [];
+    }
   }
 
   Future<void> loadSms() async {

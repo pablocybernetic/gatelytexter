@@ -362,27 +362,27 @@ class _HomeScreenState extends State<HomeScreen> {
           //     );
           //   },
           // ),
-          SwitchListTile(
-            title: Text('Activate as Default SMS App'),
-            subtitle:
-                _isDefault
-                    ? Text('This app is your default SMS handler')
-                    : Text('Not the default SMS app'),
-            value: _isDefault,
-            onChanged:
-                _loading
-                    ? null
-                    : (val) async {
-                      if (val && !_isDefault) {
-                        // only allow switching ON
-                        await promptForDefaultSmsApp();
-                        await Future.delayed(Duration(seconds: 1));
-                        await _check();
-                      }
-                    },
+          // SwitchListTile(
+          //   title: Text('Activate as Default SMS App'),
+          //   subtitle:
+          //       _isDefault
+          //           ? Text('This app is your default SMS handler')
+          //           : Text('Not the default SMS app'),
+          //   value: _isDefault,
+          //   onChanged:
+          //       _loading
+          //           ? null
+          //           : (val) async {
+          //             if (val && !_isDefault) {
+          //               // only allow switching ON
+          //               await promptForDefaultSmsApp();
+          //               await Future.delayed(Duration(seconds: 1));
+          //               await _check();
+          //             }
+          //           },
 
-            secondary: Icon(Icons.sms),
-          ),
+          //   secondary: Icon(Icons.sms),
+          // ),
         ],
       ),
     );
