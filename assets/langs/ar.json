@@ -61,8 +61,26 @@
     "use_sample_sheet": "استخدام ورقة عينة",
     "use_previous_sheet": "استخدام الورقة المستخدمة سابقًا",
     "use_new_link": "استخدام رابط جديد",
-    
-
+    "skip": "تخطي",
+    "next": "التالي",
+    "get_started": "البدء",
+    "welcome_to_gately": "مرحبًا بك في Gately",
+    "gately_description": "Gately هو تطبيق لإرسال الرسائل النصية عبر ملفات Excel. قم بتحميل ملف Excel الخاص بك وابدأ في إرسال الرسائل النصية بسهولة.",
+    "powerful_features" : "ميزات قوية",
+    "sms_management" : "إدارة الرسائل النصية",
+  "sms_management_desc" : "إدارة رسائلك النصية بسهولة مع ميزات متقدمة مثل الجدولة والتخصيص.",
+    "smart_notifications" : "إشعارات ذكية",
+    "smart_notifications_desc" : "احصل على إشعارات ذكية حول حالة رسائلك النصية، بما في ذلك التسليم والقراءة.",
+    "multi_language" : "دعم متعدد اللغات",
+    "multi_language_desc" : "يدعم التطبيق لغات متعددة لتلبية احتياجات المستخدمين حول العالم.",
+    "permissions_needed": "الأذونات المطلوبة",
+    "permissions_description": "لضمان عمل التطبيق بشكل صحيح، نحتاج إلى الأذونات التالية: الوصول إلى التخزين لقراءة ملفات Excel وإرسال الرسائل النصية.",
+    "permissions_storage": "الوصول إلى التخزين",
+"sms_permission":  "إذن الرسائل النصية",
+"sms_permission_desc" : "السماح للتطبيق بإرسال الرسائل النصية من جهازك.",
+ "notification_permission": "إذن الإشعارات",
+ "notification_permission_desc" : "السماح للتطبيق بإرسال إشعارات حول حالة الرسائل النصية.",
+  "privacy_note" : "ملاحظة الخصوصية",
     "close_btn"      : "إغلاق"
 }
   

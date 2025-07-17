@@ -46,7 +46,7 @@ class SmscService {
     try {
       final hasPermissions = await requestPermissions();
       if (!hasPermissions) {
-        throw Exception('SMS permissions not granted');
+        print("SmscService: NO PERMISSIONS for Sent");
       }
 
       final messages = await telephony.getSentSms(

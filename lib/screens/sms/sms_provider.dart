@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:another_telephony/telephony.dart';
 import 'package:gately/screens/sms/sms_service.dart';
-import 'sms_repository.dart';
+import 'package:gately/screens/sms/sms_repository.dart';
 
 class SmsProvider with ChangeNotifier {
   final SmscService smscService;
@@ -16,12 +16,13 @@ class SmsProvider with ChangeNotifier {
   SmsProvider(this.smscService, this.smsRepository);
 
   Future<void> loadMessages() async {
+    print("SmsProvider.loadMessages: called!");
     _loading = true;
     notifyListeners();
 
     try {
-      _messages =
-          await smscService.getAllMessages(); // ← Load both inbox and sent
+      _messages = await smscService.getAllMessages();
+      print("SmsProvider.loadMessages: Loaded ${_messages.length} messages");
       await smsRepository.saveMessages(_messages);
     } catch (e) {
       print('Error loading messages: $e');

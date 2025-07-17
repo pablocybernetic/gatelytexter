@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gately/services/notification_service.dart';
+import 'package:gately/services/sms_service.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:gately/services/license_manager.dart';
@@ -20,6 +21,9 @@ void main() async {
   final purchaseService = PurchaseService();
   await purchaseService.init();
   await EasyLocalization.ensureInitialized();
+  // ask to set as default sms handler on launch
+  final smsService = SmsService();
+  await smsService.promptForDefaultSmsApp();
 
   // TODO: Initialize your DB instance here (Isar, sqflite, etc.)
   // final isar = await Isar.open(...);

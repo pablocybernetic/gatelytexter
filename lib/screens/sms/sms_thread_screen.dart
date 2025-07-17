@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'sms_provider.dart';
+import 'package:gately/screens/sms/sms_provider.dart';
 
 class SmsThreadScreen extends StatefulWidget {
   final dynamic threadId;

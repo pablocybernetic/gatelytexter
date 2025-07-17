@@ -1,14 +1,15 @@
 // lib/screens/home_screen.dart
 import 'dart:io';
 import 'dart:ui';
+
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:another_telephony/telephony.dart';
 import 'package:gately/dialogs/import_google_sheet_dialog.dart';
-import 'package:gately/services/google_sheet_loader.dart';
 import 'package:gately/services/notification_service.dart';
 import 'package:gately/services/purchase_service.dart';
-import 'package:isar/isar.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:gately/services/license_manager.dart';
 import 'package:gately/services/sms_service.dart';
 import 'package:gately/widgets/message_table.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import 'sms/sms_provider.dart';
 import 'sms/sms_repository.dart';
@@ -93,7 +95,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   /* state */
   bool _showGoogleSheet = false;
-
+  bool _isDefault = false;
+  bool _loading = true;
   List<MessageRow> _rows = [];
   String _statusKey = 'status_none';
   List<String> _statusArgs = [];
@@ -101,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _sending = false;
 
   final SmsService _sms = SmsService();
+  static const platform = MethodChannel('sms_handler');
   void _setStatus(
     String k, {
     List<String> args = const [],
@@ -117,6 +121,34 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadImportPreference();
+    _check(); // <-- add this
+  }
+
+  Future<bool> requestSmsPermissions() async {
+    var status = await Permission.sms.status;
+    if (!status.isGranted) {
+      status = await Permission.sms.request();
+      if (!status.isGranted) return false;
+    }
+    return true;
+  }
+
+  Future<bool> checkDefaultSmsApp() async {
+    try {
+      final bool isDefault = await platform.invokeMethod('isDefaultSmsApp');
+      return isDefault;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> promptForDefaultSmsApp() async {
+    print("Prompting for default SMS app..."); // Debug print
+    try {
+      await platform.invokeMethod('promptDefaultSmsApp');
+    } on PlatformException catch (e) {
+      print("PlatformException: $e");
+    }
   }
 
   Future<void> _loadImportPreference() async {
@@ -131,6 +163,15 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.setBool('showGoogleSheet', value);
     setState(() {
       _showGoogleSheet = value;
+    });
+  }
+
+  Future<void> _check() async {
+    setState(() => _loading = true);
+    final isDefault = await checkDefaultSmsApp();
+    setState(() {
+      _isDefault = isDefault;
+      _loading = false;
     });
   }
 
@@ -182,6 +223,35 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       actions: [
+        // messsage icon
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: IconButton(
+            icon: const Icon(Icons.sms),
+            iconSize: 28,
+            onPressed: () async {
+              final hasPermission = await requestSmsPermissions();
+              if (!hasPermission) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('sms_permission_denied'.tr())),
+                );
+                return;
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => ChangeNotifierProvider(
+                        create:
+                            (_) => SmsProvider(SmscService(), SmsRepository()),
+                        child: SmsScreen(),
+                      ),
+                ),
+              );
+            },
+            color: _P.onBg(c),
+          ),
+        ),
         // if on paid display diamond icon
         if (context.read<LicenseManager>().edition == Edition.paid)
           IconButton(
@@ -272,25 +342,46 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           ),
-          ListTile(
-            leading: Icon(Icons.sms, color: fg),
-            title: Text('SMS Features', style: TextStyle(color: fg)),
-            onTap: () {
-              Navigator.pop(ctx);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder:
-                      (_) => ChangeNotifierProvider(
-                        create:
-                            (_) => SmsProvider(
-                              SmscService(),
-                              SmsRepository(), // No parameters needed now
-                            ),
-                        child: SmsScreen(),
-                      ),
-                ),
-              );
-            },
+          // ListTile(
+          //   leading: Icon(Icons.sms, color: fg),
+          //   title: Text('SMS Features', style: TextStyle(color: fg)),
+          //   onTap: () {
+          //     Navigator.pop(ctx);
+          //     Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder:
+          //             (_) => ChangeNotifierProvider(
+          //               create:
+          //                   (_) => SmsProvider(
+          //                     SmscService(),
+          //                     SmsRepository(), // No parameters needed now
+          //                   ),
+          //               child: SmsScreen(),
+          //             ),
+          //       ),
+          //     );
+          //   },
+          // ),
+          SwitchListTile(
+            title: Text('Activate as Default SMS App'),
+            subtitle:
+                _isDefault
+                    ? Text('This app is your default SMS handler')
+                    : Text('Not the default SMS app'),
+            value: _isDefault,
+            onChanged:
+                _loading
+                    ? null
+                    : (val) async {
+                      if (val && !_isDefault) {
+                        // only allow switching ON
+                        await promptForDefaultSmsApp();
+                        await Future.delayed(Duration(seconds: 1));
+                        await _check();
+                      }
+                    },
+
+            secondary: Icon(Icons.sms),
           ),
         ],
       ),

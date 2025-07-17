@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:another_telephony/telephony.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:gately/models/message_row.dart';
 import 'package:gately/util/validators.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -195,6 +196,50 @@ class SmsService {
 
     return statuses[Permission.sms]?.isGranted ?? false;
   }
+  // Replace with your actual package name
+  // const yourPackageName = "com.yourcompany.yourapp";
 
+  Future<bool> requestSmsPermissions() async {
+    var status = await Permission.sms.status;
+    if (!status.isGranted) {
+      status = await Permission.sms.request();
+      if (!status.isGranted) return false;
+    }
+    return true;
+  }
+
+  static const platform = MethodChannel('sms_handler');
+
+  Future<bool> checkDefaultSmsApp() async {
+    try {
+      final bool isDefault = await platform.invokeMethod('isDefaultSmsApp');
+      return isDefault;
+    } on PlatformException catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> promptForDefaultSmsApp() async {
+    print("Prompting for default SMS app..."); // Debug print
+    try {
+      await platform.invokeMethod('promptDefaultSmsApp');
+    } on PlatformException catch (e) {
+      print("PlatformException: $e");
+    }
+  }
+  // Future<bool> checkDefaultSmsApp() async {
+  //   final telephony = Telephony.instance;
+  //   return await telephony.isDefaultSmsApp;
+  // }
+
+  // Future<void> promptForDefaultSmsApp(BuildContext context) async {
+  //   if (Platform.isAndroid) {
+  //     final intent = AndroidIntent(
+  //       action: 'android.provider.Telephony.ACTION_CHANGE_DEFAULT',
+  //       arguments: <String, dynamic>{'package': yourPackageName},
+  //     );
+  //     await intent.launch();
+  //   }
+  // }
   // request SEND_SMS + READ_PHONE_STATE in one go
 }

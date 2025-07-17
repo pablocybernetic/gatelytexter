@@ -62,6 +62,31 @@
 "use_previous_sheet": "Use Previously Used Sheet",
 "use_new_link": "Enter New Link",
 
+  "skip": "Skip",
+  "next": "Next",
+  "get_started": "Get Started",
+  
+  "welcome_to_gately": "Welcome to Gately",
+  "gately_description": "Your secure and intelligent SMS management solution. Take control of your messages with advanced features and seamless user experience.",
+  
+  "powerful_features": "Powerful Features",
+  "sms_management": "SMS Management",
+  "sms_management_desc": "Organize and manage your messages efficiently",
+  "smart_notifications": "Smart Notifications",
+  "smart_notifications_desc": "Get intelligent alerts when you need them",
+  "multi_language": "Multi-Language",
+  "multi_language_desc": "Available in multiple languages for global use",
+  
+  "permissions_needed": "Permissions Needed",
+  "permissions_description": "To provide the best experience, Gately needs access to certain features on your device. Your privacy and security are our top priorities.",
+  
+  "sms_permission": "SMS Access",
+  "sms_permission_desc": "Read and manage your text messages",
+  "notification_permission": "Notifications",
+  "notification_permission_desc": "Show important alerts and updates",
+  
+  "privacy_note": "Your data stays on your device and is never shared without your consent.",
+
 "close_btn"      : "Close"
 
   }
