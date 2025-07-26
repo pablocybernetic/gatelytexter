@@ -1,14 +1,19 @@
 package com.gately.texterace
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.provider.Telephony
 import android.telephony.SmsMessage
+import android.util.Log
 import android.content.ContentValues
 import android.provider.Telephony.Sms
-import android.util.Log
+import androidx.core.app.NotificationCompat
 
 class IncomingSmsReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -29,7 +34,6 @@ class IncomingSmsReceiver : BroadcastReceiver() {
                     put(Sms.SEEN, 0)
                 }
 
-                // Only insert if default SMS app
                 if (Telephony.Sms.getDefaultSmsPackage(context) == context.packageName) {
                     try {
                         val uri = context.contentResolver.insert(Sms.CONTENT_URI, values)
@@ -40,7 +44,46 @@ class IncomingSmsReceiver : BroadcastReceiver() {
                 } else {
                     Log.d("IncomingSmsReceiver", "Not default SMS app; skipping insert")
                 }
+
+                // Notify Flutter via EventChannel
+                MainActivity.sendIncomingSmsToFlutter(address, body, timestamp)
+
+                // Show notification
+                showNotification(context, address, body)
             }
         }
+    }
+
+    private fun showNotification(context: Context, address: String, message: String) {
+        val channelId = "sms_channel_id"
+        val channelName = "SMS Notifications"
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+            channel.enableVibration(true)
+            channel.description = "Incoming SMS messages"
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, launchIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.sym_action_chat)
+            .setContentTitle("New SMS from $address")
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 }

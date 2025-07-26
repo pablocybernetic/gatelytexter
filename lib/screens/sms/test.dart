@@ -21,7 +21,6 @@ class _SmsViewtestState extends State<SmsViewtest> {
   List<SmsMessage> allMessages = [];
   bool _isLoading = false;
   bool _isSending = false;
-
   // Database instance
   Database? _database;
 

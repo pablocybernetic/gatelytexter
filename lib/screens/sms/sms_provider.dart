@@ -34,7 +34,7 @@ class SmsProvider with ChangeNotifier {
 
   Future<void> sendMessage(String address, String body, {int? simSlot}) async {
     try {
-      await smscService.sendSms(address, body, simSlot: simSlot);
+      await smscService.sendSms(address, body);
       // Reload messages after sending
       await loadMessages();
     } catch (e) {
