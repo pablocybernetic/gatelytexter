@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:another_telephony/telephony.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 class SmsService {
   final Telephony _tel = Telephony.instance;
   Completer<void>? _cancelSignal;
+  static const MethodChannel _smsHandlerChannel = MethodChannel('sms_handler');
+  static const MethodChannel _smsDbChannel = MethodChannel('sms_system_db');
 
   void cancel() {
     if (_cancelSignal != null && !_cancelSignal!.isCompleted) {
@@ -20,46 +21,21 @@ class SmsService {
 
   Future<void> sendAll(
     List<MessageRow> rows, {
-    String? countryCode, // ← Now optional
+    String? countryCode,
     required int maxPerSession,
     required void Function(String) onStatus,
     required void Function(int sent, int skipped, {bool cancelled}) onDone,
     void Function()? onRowUpdate,
   }) async {
     _cancelSignal = Completer<void>();
-
-    // if (!await _requestPermissions()) {
-    //   onStatus('SMS permission denied');
-    //   return;
-    // }
     final smsGranted = await _requestPermissions();
     if (!smsGranted) {
-      // snackbar or dialog to inform user about SMS permission
-      // AlertDialog to say permission is needed
-      (BuildContext context) {
-        return showCupertinoDialog(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: Text('Permission Required'.tr()),
-              content: Text(
-                'SMS permission is required to send messages.'.tr(),
-              ),
-              actions: [
-                CupertinoDialogAction(
-                  child: Text('OK'.tr()),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            );
-          },
-        );
-      };
+      return;
     }
 
     final notifGranted = await hasNotificationPermission();
     if (!notifGranted) {
-      onStatus('Notification permission denied'); // Inform, but do NOT return
+      onStatus('Notification permission denied');
     }
 
     int sent = 0, skipped = 0;
@@ -89,7 +65,6 @@ class SmsService {
           break outerLoop;
         }
 
-        // normalize number if needed
         num = _normalise(num, countryCode ?? '');
 
         if (!Validators.isValidNumber(num)) {
@@ -98,6 +73,7 @@ class SmsService {
           onRowUpdate?.call();
           continue;
         }
+
         if (sent >= maxPerSession) break outerLoop;
 
         try {
@@ -107,10 +83,11 @@ class SmsService {
             to: num,
             message: row.body,
             isMultipart: true,
-            statusListener: (s) {
+            statusListener: (s) async {
               if (s == SendStatus.SENT) {
                 row.status = 'Waiting'.tr();
                 sent++;
+                await _insertSentSms(num, row.body);
               } else if (s == SendStatus.DELIVERED) {
                 row.status = 'Delivered'.tr();
               } else {
@@ -132,16 +109,15 @@ class SmsService {
         } catch (e) {
           row.status = 'Failed(${e.runtimeType})';
           onStatus('Err: $e');
-          // print('Generic error $e');
           skipped++;
           onRowUpdate?.call();
         }
 
-        // throttle
         await Future.any([
           Future.delayed(const Duration(seconds: 3)),
           _cancelSignal!.future,
         ]);
+
         if (_cancelSignal!.isCompleted) {
           cancelled = true;
           break outerLoop;
@@ -153,66 +129,56 @@ class SmsService {
     _cancelSignal = null;
   }
 
-  /* utils ------------------------------------------------------------ */
+  Future<void> _insertSentSms(String address, String body) async {
+    try {
+      final isDefault = await checkDefaultSmsApp();
+      if (!isDefault) return;
 
-  /* ───────── helpers ───────── */
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final data = {"address": address, "body": body, "type": 2, "date": now};
+
+      final success = await _smsDbChannel.invokeMethod("insertSms", data);
+      if (success == true) {
+        print("SMS inserted into system DB.");
+      } else {
+        print("Failed to insert SMS.");
+      }
+    } catch (e) {
+      print("Insert SMS error: $e");
+    }
+  }
 
   String _normalise(String n, String cc) {
-    // 1️⃣ strip EVERYTHING except digits and a plus sign
     n = n.replaceAll(RegExp(r'[^\d+]'), '');
-
-    // 2️⃣ if there are several “+”, keep only the first one
     if (n.contains('+')) {
       n = '+' + n.replaceAll('+', '');
     }
-
-    /* ── the rest is exactly as before ─────────────────────────── */
-
-    // already full international
     if (n.startsWith('+')) return n;
-
-    // caller supplied CC → prepend
     if (cc.isNotEmpty) {
       if (n.startsWith('0')) n = n.substring(1);
       return '$cc$n';
     }
-
-    // fallback to default (Kenya)
     const defaultCc = '+254';
     if (!n.startsWith('0') && n.length == 12) return '+$n';
     if (n.startsWith('0')) return '$defaultCc${n.substring(1)}';
-    return n; // may still be invalid, validator will catch
+    return n;
   }
 
-  // Notification only Permission method bool
   Future<bool> hasNotificationPermission() async {
     final status = await Permission.notification.status;
     return status.isGranted;
   }
 
   Future<bool> _requestPermissions() async {
-    // Request both SMS and Notification permissions
     final statuses = await [Permission.sms, Permission.notification].request();
-
     return statuses[Permission.sms]?.isGranted ?? false;
   }
-  // Replace with your actual package name
-  // const yourPackageName = "com.yourcompany.yourapp";
-
-  Future<bool> requestSmsPermissions() async {
-    var status = await Permission.sms.status;
-    if (!status.isGranted) {
-      status = await Permission.sms.request();
-      if (!status.isGranted) return false;
-    }
-    return true;
-  }
-
-  static const platform = MethodChannel('sms_handler');
 
   Future<bool> checkDefaultSmsApp() async {
     try {
-      final bool isDefault = await platform.invokeMethod('isDefaultSmsApp');
+      final bool isDefault = await _smsHandlerChannel.invokeMethod(
+        'isDefaultSmsApp',
+      );
       return isDefault;
     } on PlatformException catch (_) {
       return false;
@@ -220,26 +186,10 @@ class SmsService {
   }
 
   Future<void> promptForDefaultSmsApp() async {
-    print("Prompting for default SMS app..."); // Debug print
     try {
-      await platform.invokeMethod('promptDefaultSmsApp');
+      await _smsHandlerChannel.invokeMethod('promptDefaultSmsApp');
     } on PlatformException catch (e) {
-      print("PlatformException: $e");
+      print("Default app prompt failed: $e");
     }
   }
-  // Future<bool> checkDefaultSmsApp() async {
-  //   final telephony = Telephony.instance;
-  //   return await telephony.isDefaultSmsApp;
-  // }
-
-  // Future<void> promptForDefaultSmsApp(BuildContext context) async {
-  //   if (Platform.isAndroid) {
-  //     final intent = AndroidIntent(
-  //       action: 'android.provider.Telephony.ACTION_CHANGE_DEFAULT',
-  //       arguments: <String, dynamic>{'package': yourPackageName},
-  //     );
-  //     await intent.launch();
-  //   }
-  // }
-  // request SEND_SMS + READ_PHONE_STATE in one go
 }
