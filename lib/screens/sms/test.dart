@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:another_telephony/telephony.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 class SmsViewtest extends StatefulWidget {
@@ -20,9 +22,16 @@ class _SmsViewtestState extends State<SmsViewtest> {
   bool _isLoading = false;
   bool _isSending = false;
 
+  // Database instance
+  Database? _database;
+
+  // Platform channel for system SMS operations
+  static const MethodChannel _smsChannel = MethodChannel('sms_system_db');
+
   @override
   void initState() {
     super.initState();
+    _initDatabase();
     loadSms();
   }
 
@@ -30,9 +39,242 @@ class _SmsViewtestState extends State<SmsViewtest> {
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
+    _database?.close();
     super.dispose();
   }
 
+  // Initialize local database
+  Future<void> _initDatabase() async {
+    try {
+      _database = await openDatabase(
+        'sms_backup.db',
+        version: 1,
+        onCreate: (db, version) {
+          return db.execute('''
+            CREATE TABLE sms_messages(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              address TEXT NOT NULL,
+              body TEXT NOT NULL,
+              date INTEGER NOT NULL,
+              type INTEGER NOT NULL,
+              status TEXT,
+              thread_id INTEGER,
+              created_at INTEGER NOT NULL
+            )
+          ''');
+        },
+      );
+    } catch (e) {
+      print('Database initialization failed: $e');
+    }
+  }
+
+  // Save SMS to local database
+  Future<void> _saveToLocalDb(
+    String address,
+    String body,
+    int type, {
+    String? status,
+  }) async {
+    if (_database == null) return;
+
+    try {
+      await _database!.insert('sms_messages', {
+        'address': address,
+        'body': body,
+        'date': DateTime.now().millisecondsSinceEpoch,
+        'type': type,
+        'status': status ?? 'pending',
+        'created_at': DateTime.now().millisecondsSinceEpoch,
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      print('Failed to save to local database: $e');
+    }
+  }
+
+  // Save SMS to system database using platform channel
+  Future<bool> _saveToSystemDb(String address, String body, int type) async {
+    try {
+      final result = await _smsChannel.invokeMethod('insertSms', {
+        'address': address,
+        'body': body,
+        'type': type, // 1 = received, 2 = sent
+        'date': DateTime.now().millisecondsSinceEpoch,
+        'thread_id': await _getThreadId(address),
+      });
+
+      print('SMS saved to system database: $result');
+      return result as bool? ?? false;
+    } on PlatformException catch (e) {
+      print('Failed to save to system database: ${e.message}');
+      return false;
+    } catch (e) {
+      print('Error saving to system database: $e');
+      return false;
+    }
+  }
+
+  // Get thread ID for the conversation
+  Future<int> _getThreadId(String address) async {
+    try {
+      // Try to find existing thread ID from previous messages
+      final existingMessages = await telephony.getInboxSms(
+        filter: SmsFilter.where(SmsColumn.ADDRESS).equals(address),
+        columns: [SmsColumn.THREAD_ID],
+        sortOrder: [OrderBy(SmsColumn.DATE, sort: Sort.DESC)],
+      );
+
+      if (existingMessages.isNotEmpty &&
+          existingMessages.first.threadId != null) {
+        return existingMessages.first.threadId!;
+      }
+
+      // If no existing thread, create a new one
+      return DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    } catch (e) {
+      print('Failed to get thread ID: $e');
+      return DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    }
+  }
+
+  // Enhanced sendSms method with database storage
+  Future<void> sendSms() async {
+    if (_messageController.text.trim().isEmpty) return;
+
+    setState(() => _isSending = true);
+
+    try {
+      if (!await requestPermissions()) {
+        throw Exception('SMS permissions not granted');
+      }
+
+      final message = _messageController.text.trim();
+      final completer = Completer<void>();
+
+      // Save to local database immediately (as pending)
+      await _saveToLocalDb(
+        widget.targetNumber,
+        message,
+        2, // Type 2 for sent messages
+        status: 'pending',
+      );
+
+      // Save to system database immediately (as default SMS handler)
+      final systemSaved = await _saveToSystemDb(
+        widget.targetNumber,
+        message,
+        2,
+      );
+      if (!systemSaved) {
+        print('Warning: Failed to save to system SMS database');
+      }
+
+      await telephony.sendSms(
+        to: widget.targetNumber,
+        message: message,
+        isMultipart: true,
+        statusListener: (SendStatus status) async {
+          // Update local database with delivery status
+          await _updateMessageStatus(message, status.toString());
+
+          if (status == SendStatus.SENT) {
+            _showSuccessSnackBar('Message sent successfully');
+            _messageController.clear();
+
+            // Update local database status
+            await _saveToLocalDb(
+              widget.targetNumber,
+              message,
+              2,
+              status: 'sent',
+            );
+
+            loadSms(); // Refresh messages after actual sending
+          } else if (status == SendStatus.DELIVERED) {
+            _showSuccessSnackBar('Message delivered');
+
+            // Update local database status
+            await _saveToLocalDb(
+              widget.targetNumber,
+              message,
+              2,
+              status: 'delivered',
+            );
+          } else {
+            _showErrorSnackBar('Failed to send message: $status');
+
+            // Update local database status
+            await _saveToLocalDb(
+              widget.targetNumber,
+              message,
+              2,
+              status: 'failed',
+            );
+          }
+
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+        },
+      );
+
+      // Wait for status callback
+      await completer.future.timeout(
+        Duration(seconds: 30),
+        onTimeout: () async {
+          _showErrorSnackBar('Message sending timed out');
+          await _updateMessageStatus(message, 'timeout');
+        },
+      );
+    } catch (e) {
+      _showErrorSnackBar('Failed to send message: $e');
+
+      // Update local database with error status
+      await _saveToLocalDb(
+        widget.targetNumber,
+        _messageController.text.trim(),
+        2,
+        status: 'error: $e',
+      );
+    } finally {
+      setState(() => _isSending = false);
+    }
+  }
+
+  // Update message status in local database
+  Future<void> _updateMessageStatus(String messageBody, String status) async {
+    if (_database == null) return;
+
+    try {
+      await _database!.update(
+        'sms_messages',
+        {'status': status},
+        where: 'body = ? AND address = ? AND type = 2',
+        whereArgs: [messageBody, widget.targetNumber],
+      );
+    } catch (e) {
+      print('Failed to update message status: $e');
+    }
+  }
+
+  // Get messages from local database (optional backup method)
+  Future<List<Map<String, dynamic>>> getLocalMessages() async {
+    if (_database == null) return [];
+
+    try {
+      return await _database!.query(
+        'sms_messages',
+        where: 'address = ?',
+        whereArgs: [widget.targetNumber],
+        orderBy: 'date ASC',
+      );
+    } catch (e) {
+      print('Failed to get local messages: $e');
+      return [];
+    }
+  }
+
+  // Existing methods remain the same...
   Future<bool> requestPermissions() async {
     final smsStatus = await Permission.sms.request();
     final phoneStatus = await Permission.phone.request();
@@ -74,7 +316,6 @@ class _SmsViewtestState extends State<SmsViewtest> {
         sortOrder: [OrderBy(SmsColumn.DATE, sort: Sort.DESC)],
       );
     } catch (e) {
-      // If getSentSms fails, try alternative approach
       print('getSentSms failed: $e');
       return await _getAlternativeSentMessages();
     }
@@ -82,10 +323,8 @@ class _SmsViewtestState extends State<SmsViewtest> {
 
   Future<List<SmsMessage>> _getAlternativeSentMessages() async {
     try {
-      // Try to get messages from different SMS folders
       List<SmsMessage> sentMessages = [];
 
-      // Try getting from outbox
       try {
         final outboxMessages = await telephony.getSentSms(
           filter: SmsFilter.where(
@@ -103,7 +342,6 @@ class _SmsViewtestState extends State<SmsViewtest> {
         print('Outbox query failed: $e');
       }
 
-      // Try getting from draft
       try {
         final draftMessages = await telephony.getDraftSms(
           filter: SmsFilter.where(
@@ -143,7 +381,6 @@ class _SmsViewtestState extends State<SmsViewtest> {
         _isLoading = false;
       });
 
-      // Scroll to bottom after loading
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
@@ -156,54 +393,6 @@ class _SmsViewtestState extends State<SmsViewtest> {
     } catch (e) {
       setState(() => _isLoading = false);
       _showErrorSnackBar('Failed to load messages: $e');
-    }
-  }
-
-  Future<void> sendSms() async {
-    if (_messageController.text.trim().isEmpty) return;
-
-    setState(() => _isSending = true);
-
-    try {
-      if (!await requestPermissions()) {
-        throw Exception('SMS permissions not granted');
-      }
-
-      final message = _messageController.text.trim();
-      final completer = Completer<void>();
-
-      await telephony.sendSms(
-        to: widget.targetNumber,
-        message: message,
-        isMultipart: true,
-        statusListener: (SendStatus status) {
-          if (status == SendStatus.SENT) {
-            _showSuccessSnackBar('Message sent successfully');
-            _messageController.clear();
-            loadSms(); // Refresh messages after actual sending
-          } else if (status == SendStatus.DELIVERED) {
-            _showSuccessSnackBar('Message delivered');
-          } else {
-            _showErrorSnackBar('Failed to send message: $status');
-          }
-
-          if (!completer.isCompleted) {
-            completer.complete();
-          }
-        },
-      );
-
-      // Wait for status callback
-      await completer.future.timeout(
-        Duration(seconds: 30),
-        onTimeout: () {
-          _showErrorSnackBar('Message sending timed out');
-        },
-      );
-    } catch (e) {
-      _showErrorSnackBar('Failed to send message: $e');
-    } finally {
-      setState(() => _isSending = false);
     }
   }
 
